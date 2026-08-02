@@ -682,6 +682,7 @@ function load(){
   if(!S.filled101){
     for(var k2 in DEFAULTS){ if(S.set[k2]==="" && DEFAULTS[k2]) S.set[k2]=DEFAULTS[k2]; }
     S.filled101=true;
+    save();   // persist now; otherwise the backfill only sticks after some other write
   }
   if(typeof S.xp!=="number") S.xp=0;
   if(typeof S.days!=="number") S.days=0;
