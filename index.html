@@ -116,13 +116,72 @@ main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px 24px
 .mi.sec{background:var(--sec-muted);color:var(--sec-light)}
 .mi.neutral{background:rgba(120,130,150,.12);color:var(--text-secondary)}
 .mt{flex:1;min-width:0}
-.mt h4{font-size:15px;font-weight:500;letter-spacing:-.1px}
-.mt p{font-size:12px;color:var(--text-muted);margin-top:2px;line-height:1.4}
+.mt h4{font-size:15px;font-weight:500;letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mt p{font-size:12px;color:var(--text-muted);margin-top:2px;line-height:1.4;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tab .dot{width:22px;height:22px;display:flex;align-items:center;justify-content:center}
 .weakrow{display:flex;align-items:center;gap:10px;margin-top:9px}
 .weakname{font-size:12px;color:var(--text-secondary);flex:0 0 138px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar{flex:1;height:5px;border-radius:9999px;background:rgba(120,130,150,.16);overflow:hidden}
 .bar i{display:block;height:100%;border-radius:9999px;transition:width 500ms var(--smooth)}
 .weakpct{font-size:11px;font-weight:500;color:var(--text-muted);flex:0 0 32px;text-align:right;font-feature-settings:"cv01","tnum"}
+
+/* LEARN */
+.chap{display:flex;align-items:center;gap:13px;background:var(--bg-card);border:1px solid var(--border-subtle);
+  border-top:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 13px;box-shadow:var(--shadow-card);
+  margin-bottom:6px;width:100%;text-align:left;transition:all 160ms var(--snappy)}
+[data-theme="light"] .chap{border-top-color:var(--border-default)}
+.chap:active{transform:scale(.99);background:var(--bg-elevated)}
+.chap.now{background:linear-gradient(135deg,rgba(13,148,136,.16),rgba(13,148,136,.05));border-color:rgba(13,148,136,.3)}
+.cn{width:32px;height:32px;border-radius:8px;flex:0 0 32px;display:flex;align-items:center;justify-content:center;
+  background:rgba(120,130,150,.12);color:var(--text-secondary);font-size:13px;font-weight:600;font-feature-settings:"cv01","tnum"}
+.chap.now .cn{background:var(--accent-muted);color:var(--accent-light)}
+.chap.done .cn{background:var(--success-muted);color:var(--success)}
+[data-theme="light"] .chap.now .cn{color:var(--accent)}
+.ct{flex:1;min-width:0;display:block}
+.ct h4{font-size:14px;font-weight:500;letter-spacing:-.1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ct .meta{font-size:11.5px;color:var(--text-muted);margin-top:3px;display:block}
+.minibar{height:4px;border-radius:9999px;background:rgba(120,130,150,.16);overflow:hidden;margin-top:7px;display:block}
+.minibar i{display:block;height:100%;border-radius:9999px;transition:width 500ms var(--smooth)}
+.pcttag{font-size:11px;font-weight:600;color:var(--text-muted);font-feature-settings:"cv01","tnum";flex:0 0 auto}
+.sets{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.setchip{width:52px;height:52px;border-radius:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  border:1px solid var(--border-default);background:var(--bg-elevated);font-size:13px;font-weight:600;
+  color:var(--text-secondary);font-feature-settings:"cv01","tnum";transition:all 140ms var(--snappy)}
+.setchip:active{transform:scale(.95)}
+.setchip small{font-size:8.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text-disabled)}
+.setchip.done{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.4);color:var(--success)}
+.setchip.done small{color:rgba(16,185,129,.7)}
+.setchip.now{background:linear-gradient(135deg,rgba(13,148,136,.22),rgba(13,148,136,.08));border-color:var(--accent);color:var(--accent-light)}
+.setchip.now small{color:var(--accent-light)}
+[data-theme="light"] .setchip.now{color:var(--accent)}
+.phase{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.phasepill{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;border-radius:9999px;padding:4px 10px}
+.phasepill.learn{background:var(--sec-muted);color:var(--sec-light)}
+.phasepill.lock{background:var(--accent-muted);color:var(--accent-light)}
+[data-theme="light"] .phasepill.lock{color:var(--accent)}
+/* NB: named pdot, not dot. `.tab .dot` is the tab bar's icon wrapper — reusing
+   a generic class name here shrank every tab icon to 6px. Same failure mode as
+   the data-theme collision: generic names must not be shared across purposes. */
+.dots{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+.pdot{width:6px;height:6px;border-radius:50%;background:rgba(120,130,150,.25);transition:background 200ms var(--snappy)}
+.pdot.on{background:var(--sec-light)}
+.pdot.ok{background:var(--success)}
+.teachq{font-size:13px;font-weight:500;color:var(--text-secondary);line-height:1.4;margin-bottom:10px}
+.teacha{font-size:26px;font-weight:500;line-height:1.22;letter-spacing:-.5px;margin-bottom:6px}
+.teachalt{font-size:12.5px;color:var(--text-muted);line-height:1.45}
+.hook{margin-top:16px;border-radius:10px;padding:14px 15px;
+  background:linear-gradient(135deg,rgba(155,44,44,.15),rgba(155,44,44,.05));border:1px solid rgba(155,44,44,.3)}
+.hook .lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--sec-light);
+  display:flex;align-items:center;gap:6px;margin-bottom:7px}
+.hook p{font-size:13px;line-height:1.58;color:var(--text-primary)}
+.hook p+p{margin-top:9px;color:var(--text-secondary)}
+[data-theme="light"] .hook p{color:#3f3f46}
+[data-theme="light"] .hook p+p{color:#52525b}
+.requeue{border-radius:10px;padding:12px 14px;background:var(--warning-muted);
+  border:1px solid rgba(245,158,11,.24);display:flex;gap:10px;align-items:flex-start}
+.requeue .t{font-size:12.5px;font-weight:500;color:var(--warning)}
+.requeue .d{font-size:11.5px;color:var(--text-secondary);line-height:1.45;margin-top:2px}
 
 /* QUIZ SHARED */
 .hud{display:flex;align-items:center;justify-content:space-between;padding:2px 0 11px}
@@ -561,6 +620,101 @@ var STORY = {
      "Texas was the most remote Confederate state, and news travelled at the speed of the army carrying it."]
 };
 
+/* --- the hook layer -------------------------------------------------------
+   Learn mode teaches before it tests, so every question needs something to
+   say. The 42 above carry a full story; these are the other 86 — one or two
+   lines that give the fact a handle, usually by tying it to another fact.
+   Self-tests enforce that every question has exactly one of story or hook.
+   ---------------------------------------------------------------------- */
+var HOOK = {
+1:"A republic, not a direct democracy — you elect people to decide for you. “Constitution-based federal republic” is the long form: federal because power is split with the states.",
+2:"Supreme means everything loses to it — state law, federal law, executive orders. When something is struck down as unconstitutional, this is what it lost to.",
+3:"Four jobs: forms the government, defines its powers, defines its parts, protects the rights of the people. Any one of them is a correct answer.",
+5:"Amendments — and it is deliberately hard. Two-thirds of both houses to propose, three-quarters of the states to ratify. That difficulty is why there are only 27.",
+6:"The first ten amendments. Watch the wording: it protects the rights of people living in the United States, not only citizens.",
+8:"It is the break-up letter, not the rulebook. America is free from Britain, all people are created equal, and rights are inherent rather than granted by a king.",
+9:"The Declaration of Independence. The Constitution came eleven years later — this one leaves Britain, that one builds the government.",
+10:"Equality, liberty, natural rights, limited government, self-government, the social contract. Any two; they all describe power flowing upward from people.",
+11:"The Declaration of Independence, not the Constitution. Rough rule: if it sounds like a promise it's the Declaration, if it sounds like a rule it's the Constitution.",
+12:"Capitalism, or free market economy. It appears nowhere in the Constitution — the test just wants the plain description.",
+13:"Nobody is above the law, including the people who write it. That is the whole idea in one sentence.",
+16:"Legislative, executive, judicial — or plainly: Congress, the president, the courts. Make laws, carry out laws, interpret laws.",
+17:"The executive. Executive means to carry out; it is the branch that executes the laws Congress writes.",
+18:"Congress. The president can sign or veto, but writing is the legislature's job alone.",
+19:"Senate and House. The Senate is the small chamber with the long terms, the House the big one with the short terms.",
+20:"Writes laws, declares war, makes the federal budget. Note that declaring war belongs to Congress, not the president.",
+21:"One hundred — two per state, no exceptions. The number that moves is 435 in the House, because that one follows population.",
+22:"Six years, staggered so only a third are up at once. The Senate can never be replaced in a single election, which is the point of it.",
+23:"Every state gets exactly two, from Wyoming to California. Yours are in Settings — they change with elections, so re-check before it counts.",
+24:"Four hundred thirty-five, frozen there since 1929. It was meant to grow with the country and Congress simply stopped enlarging it.",
+25:"Two years — short enough that a House member is essentially always campaigning.",
+27:"Two. Every state, regardless of size or population. That is the Great Compromise expressed as a single number.",
+29:"This one is district-level, not state-level — New York alone has 26 districts. Yours is in Settings; house.gov will find it from an address.",
+30:"Second in line to the presidency after the vice president. Chosen by the House itself, not directly by voters.",
+31:"The whole state. That is the difference from a House member, who speaks for one district only.",
+32:"Voters of the state — but only since 1913. Before the 17th Amendment, state legislatures chose the senators.",
+33:"One congressional district, not the whole state. About 760,000 people each.",
+34:"Voters inside that district, and nobody outside it. Which is exactly why district lines are fought over so hard.",
+36:"Four years. Two for the House, four for the president, six for the Senate — 2, 4, 6, in ascending order.",
+38:"Changes with elections. The answer must be whoever holds the office on the day you are asked, not who held it when you filed.",
+39:"Also changes with elections. The vice president's only constitutional duties are to break Senate ties and to be ready.",
+40:"The vice president. After that, the Speaker of the House, then the president pro tempore of the Senate.",
+41:"Signs or vetoes bills, enforces the laws, commands the military, acts as chief diplomat, appoints federal judges.",
+42:"The president — a civilian, deliberately. Civilian control of the military is a design decision, not an accident.",
+43:"The president. Congress writes, the president signs; that handoff is the whole legislative process in miniature.",
+44:"The president. Congress can override a veto, but it takes two-thirds of both houses, so it rarely happens.",
+45:"The president appoints — and the Senate confirms. Neither one can seat a judge alone.",
+46:"The president, the Cabinet, and the federal departments and agencies. By headcount this is most of the government.",
+47:"Advises the president. Each secretary runs a department and must be confirmed by the Senate.",
+48:"The department secretaries, plus the Attorney General and the vice president. Any two of them count.",
+50:"The Supreme Court, and the federal courts beneath it.",
+51:"Reviews laws, explains laws, settles disputes about the law, and decides whether a law violates the Constitution.",
+52:"The Supreme Court. There is exactly one court above the federal appeals courts, and this is it.",
+53:"Nine — but nine is only a law, not the Constitution. It has been as low as five and as high as ten, and has stood at nine since 1869.",
+55:"For life, or until they choose to retire. No fixed term and no mandatory retirement age.",
+57:"Changes with appointments. The Chief Justice also presides over a presidential impeachment trial in the Senate.",
+58:"Print money, declare war, raise an army, make treaties, set foreign policy. One country, one voice abroad.",
+59:"Schools, police, fire departments, driver's licences, zoning. Broadly, everything you would call day-to-day life.",
+61:"State-level, so it follows from where you live. Yours is in Settings and changes with elections.",
+62:"Often not the largest city — Albany rather than New York City, Sacramento rather than Los Angeles. Capitals were usually placed centrally, not commercially.",
+64:"Citizens, and only citizens. This is the practical dividing line between citizenship and lawful residence.",
+65:"Speech, expression, assembly, petition, religion, and the right to bear arms — for everyone living here, not only citizens.",
+67:"Give up loyalty to other countries, defend the Constitution, obey the laws, and serve the nation if it is needed.",
+68:"Born here under the 14th Amendment, naturalise, or derive citizenship through a parent.",
+69:"Vote, run for office, join a party or a community group, help a campaign, contact officials, write to a newspaper.",
+70:"Vote, pay taxes, obey the law, serve in the military, run for office, work for government.",
+73:"Freedom, religious freedom, political liberty, economic opportunity, escaping persecution.",
+75:"Africans. Roughly twelve million people were shipped across the Atlantic; about 400,000 of them to North America.",
+76:"The American Revolution, 1775 to 1783 — eight years, far longer than most people assume.",
+78:"Jefferson, at 33, in about seventeen days. Franklin and Adams edited it before Congress cut a quarter of it.",
+81:"The Atlantic seaboard, north to south: New Hampshire, Massachusetts, Rhode Island, Connecticut, New York, New Jersey, Pennsylvania, Delaware, Maryland, Virginia, the two Carolinas, Georgia.",
+82:"The Constitution. Keep the three dates straight: 1776 declares independence, 1787 writes the government, 1791 adds the Bill of Rights.",
+83:"Madison, Hamilton and Jay — all three writing under the single pen name Publius.",
+86:"Father of Our Country, first president, general of the Continental Army, president of the Constitutional Convention.",
+87:"Wrote the Declaration, third president, doubled the size of the country with the Louisiana Purchase, first Secretary of State.",
+91:"War of 1812, Mexican-American, Civil War, Spanish-American. The Revolution does not count — that one is the 1700s.",
+92:"The Civil War, 1861 to 1865. Also called the War Between the States.",
+94:"Freed the slaves, saved the Union, led the country through the Civil War, delivered the Gettysburg Address, 16th president.",
+96:"The Civil War — though legally it was the 13th Amendment in 1865 that actually finished it.",
+100:"World War I, World War II, Korea, Vietnam, the Persian Gulf. Five, in that order.",
+103:"The longest economic downturn in modern history — about a decade, not a single bad year.",
+105:"Franklin Roosevelt, who won four elections and is the reason a two-term limit now exists.",
+108:"The Soviet Union. The two never fought each other directly, which is exactly why it is called cold.",
+109:"Communism and nuclear war. Containment abroad, fallout shelters at home.",
+110:"To stop the spread of communism — the same answer as Vietnam. Both are containment.",
+111:"To stop the spread of communism. Identical to Korea; the test wants the same sentence for both.",
+113:"Fought for civil rights and worked for equality — that people be judged by the content of their character rather than the colour of their skin.",
+114:"To force the Iraqi military out of Kuwait, which Iraq had invaded in 1990.",
+116:"The War on Terror, the war in Afghanistan, the war in Iraq.",
+117:"Any one of hundreds. Cherokee, Navajo, Sioux, Apache and Mohawk are all accepted; there are 574 federally recognised tribal nations.",
+119:"Washington, D.C. — deliberately not inside any state, so that no state could claim the seat of government.",
+122:"One star for each state. The stars grow with the country; the thirteen stripes never change.",
+123:"The Star-Spangled Banner — a poem about a flag surviving a night of bombardment, set to the tune of an old drinking song.",
+125:"The Fourth of July: the country's birthday, marking independence from Britain.",
+127:"Honours those who died in military service. May — the one for the dead.",
+128:"Honours everyone who has served, living or dead. November — the one for the living."
+};
+
 /* --- hand-checked distractor pools ---------------------------------------
    For questions with many accepted answers, auto-generated wrong options are
    frequently correct by accident. These pools are written by hand and are
@@ -651,9 +805,41 @@ var Q = RAW.map(function(r){
   var c = catOf(r[0]);
   return {id:r[0], q:r[1], a:r[2], cat:c.k, catName:c.name, group:c.group,
           star:STAR.indexOf(r[0])>=0, varies:VARIES[r[0]]||null,
-          need:NEED[r[0]]||1, story:STORY[r[0]]||null};
+          need:NEED[r[0]]||1, story:STORY[r[0]]||null, hook:HOOK[r[0]]||null};
 });
 var BY_ID = {}; Q.forEach(function(q){ BY_ID[q.id]=q; });
+
+/* --- Learn: chapters and sets --------------------------------------------
+   A chapter is one official category. Chapters are too big to sit down with
+   (System of Government is 47), so each splits into sets of ~6 in question
+   order — roughly three minutes, and the unit you actually finish. Sizes are
+   levelled so no set is left with one straggler.
+   ---------------------------------------------------------------------- */
+var SET_TARGET = 6;
+var SETS = {};                       // cat -> array of arrays of ids
+CATS.forEach(function(c){
+  var ids = Q.filter(function(q){ return q.cat===c.k; }).map(function(q){ return q.id; });
+  var n = Math.max(1, Math.ceil(ids.length/SET_TARGET));
+  var base = Math.floor(ids.length/n), extra = ids.length%n, out=[], p=0;
+  for(var i=0;i<n;i++){ var size = base + (i<extra?1:0); out.push(ids.slice(p,p+size)); p+=size; }
+  SETS[c.k]=out;
+});
+function setsOf(cat){ return SETS[cat]||[]; }
+function clearedSets(cat){ return (S.learn && S.learn[cat]) || []; }
+function isCleared(cat,i){ return clearedSets(cat).indexOf(i)>=0; }
+function chapterDone(cat){ return clearedSets(cat).length >= setsOf(cat).length; }
+function learnedCount(){
+  var n=0; CATS.forEach(function(c){
+    clearedSets(c.k).forEach(function(i){ n += (setsOf(c.k)[i]||[]).length; });
+  }); return n;
+}
+function nextSet(){
+  for(var i=0;i<CATS.length;i++){
+    var c=CATS[i], sets=setsOf(c.k);
+    for(var j=0;j<sets.length;j++) if(!isCleared(c.k,j)) return {cat:c, idx:j};
+  }
+  return null;
+}
 
 /* Senators, governor and capital are state-level so a state default works.
    The House is district-level — NY alone has 26 — so the rep default is the
@@ -672,8 +858,8 @@ function load(){
   var raw=null;
   try{ raw = localStorage.getItem("civics.v1"); }catch(e){}
   S = raw ? JSON.parse(raw) : null;
-  if(!S || typeof S!=="object"){ S = {box:{}, mastAt:{}, xp:0, days:0, lastDay:null, exams:[], set:{}}; }
-  S.box=S.box||{}; S.mastAt=S.mastAt||{}; S.exams=S.exams||[]; S.set=S.set||{};
+  if(!S || typeof S!=="object"){ S = {box:{}, mastAt:{}, xp:0, days:0, lastDay:null, exams:[], set:{}, learn:{}}; }
+  S.box=S.box||{}; S.mastAt=S.mastAt||{}; S.exams=S.exams||[]; S.set=S.set||{}; S.learn=S.learn||{};
   for(var k in DEFAULTS){ if(S.set[k]===undefined) S.set[k]=DEFAULTS[k]; }
   // One-time backfill. Installs created before the rep was prefilled hold an
   // empty string, and an empty string is not `undefined`, so the default above
@@ -805,9 +991,12 @@ function toast(msg){
 function render(){
   document.documentElement.setAttribute("data-theme", S.set.theme);
   var bar=$("#appbar"), tabs=$("#tabbar"), m=$("#main");
-  var quiz = (view==="drill"||view==="exam");
+  var quiz = (view==="drill"||view==="exam"||view==="set");
   tabs.style.display = quiz ? "none" : "flex";
   if(view==="home")      { bar.innerHTML=barHome();   m.innerHTML=screenHome(); }
+  else if(view==="learn"){ bar.innerHTML=barTitle("Learn", learnedCount()+" / 128 learned"); m.innerHTML=screenLearn(); }
+  else if(view==="chapter"){ bar.innerHTML=barBack(ctx.cat.name); m.innerHTML=screenChapter(); }
+  else if(view==="set")  { bar.innerHTML=barQuiz("Set "+(ctx.idx+1)+" · "+ctx.cat.name); m.innerHTML=screenSet(); }
   else if(view==="drill"){ bar.innerHTML=barQuiz(ctx.i+1+" of "+ctx.qs.length); m.innerHTML=screenDrill(); }
   else if(view==="exam") { bar.innerHTML=barQuiz("Official exam simulation"); m.innerHTML=screenExam(); }
   else if(view==="result"){bar.innerHTML=barHome();   m.innerHTML=screenResult(); }
@@ -827,12 +1016,22 @@ function barTitle(t,right){
 }
 function barQuiz(label){
   return '<button class="icobtn" data-quit="1">'+svg(ICON.x,16,2)+'</button>'+
-         '<span class="micro">'+label+'</span><span style="width:34px"></span>';
+         '<span class="micro" style="text-align:center;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+label+'</span>'+
+         '<span style="width:34px;flex:0 0 34px"></span>';
+}
+function barBack(title){
+  return '<div style="display:flex;align-items:center;gap:10px;min-width:0">'+
+    '<button class="icobtn" data-go="learn">'+svg('<path d="m15 18-6-6 6-6"/>',15,2)+'</button>'+
+    '<h1 style="font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(title)+'</h1></div>';
 }
 function tabbar(){
-  var t=[["home","Home",ICON.home],["drill","Drill",ICON.bolt],["exam","Exam",ICON.doc],["study","Study",ICON.book]];
+  var t=[["home","Home",ICON.home],["learn","Learn",ICON.quill],["drill","Drill",ICON.bolt],
+         ["exam","Exam",ICON.doc],["study","Study",ICON.book]];
   return t.map(function(x){
-    var on = (view===x[0]) || (view==="result"&&x[0]==="exam") || (view==="settings"&&x[0]==="home");
+    var on = (view===x[0])
+          || (view==="result" && ((ctx.learn&&x[0]==="learn") || (ctx.drill&&x[0]==="drill") || (ctx.exam&&x[0]==="exam")))
+          || ((view==="chapter") && x[0]==="learn")
+          || (view==="settings" && x[0]==="home");
     return '<button class="tab'+(on?" on":"")+'" data-tab="'+x[0]+'"><span class="dot">'+svg(x[2],18)+'</span>'+x[1]+'</button>';
   }).join("");
 }
@@ -866,7 +1065,14 @@ function screenHome(){
      '<div class="pill"><div class="v"'+(last?' style="color:var(--'+(last.passed?"success":"error")+')"':'')+'>'+(last?last.correct+"/"+last.asked:"—")+'</div><div class="l">Last exam</div></div>'+
    '</div>'+
    '<div style="margin-top:20px">'+
-     mode("drill","primary","","Daily Drill","10 questions · 3 lives · beat the clock",ICON.bolt)+
+     (function(){
+       var nx=nextSet(), lc=learnedCount();
+       return nx
+         ? mode("learn","primary","","Learn"+(lc?" — continue":""),
+                nx.cat.name+" · set "+(nx.idx+1)+" of "+setsOf(nx.cat.k).length,ICON.quill)
+         : mode("learn","","","Learn","All 8 chapters cleared",ICON.quill);
+     })()+
+     mode("drill",nextSet()?"":"primary","","Daily Drill","10 questions · 3 lives · beat the clock",ICON.bolt)+
      mode("exam","","sec","Take the Exam","The real thing · 20 asked, 12 to pass",ICON.doc)+
      mode("study","","neutral","Study all 128","By category · official answers",ICON.book)+
    '</div>'+
@@ -884,6 +1090,180 @@ function mode(go,cls,icls,t,sub,icon){
     '<span class="mi '+icls+'">'+svg(icon,19)+'</span>'+
     '<span class="mt"><h4>'+t+'</h4><p>'+sub+'</p></span>'+
     '<span style="color:var(--text-disabled)">'+svg(ICON.chev,16,1.8)+'</span></button>';
+}
+
+/* ---- LEARN: chapters -> sets -> teach/lock ---- */
+function screenLearn(){
+  var total=learnedCount(), nx=nextSet();
+  var h='<div class="fade">';
+  CATS.forEach(function(c,i){
+    var sets=setsOf(c.k), cleared=clearedSets(c.k).length, qs=Q.filter(function(q){return q.cat===c.k;}).length;
+    var pct=Math.round(cleared/sets.length*100);
+    var done=chapterDone(c.k), isNext = nx && nx.cat.k===c.k;
+    var col = done?"var(--success)":"linear-gradient(90deg,#0d9488,#2dd4bf)";
+    h+='<button class="chap'+(done?" done":isNext?" now":"")+'" data-chapter="'+c.k+'">'+
+       '<span class="cn">'+(done?"✓":(i+1))+'</span>'+
+       '<span class="ct"><h4>'+esc(c.name)+'</h4>'+
+       '<span class="meta">'+cleared+' of '+sets.length+' set'+(sets.length===1?"":"s")+' · '+qs+' questions</span>'+
+       '<span class="minibar"><i style="width:'+Math.max(pct,0)+'%;background:'+col+'"></i></span></span>'+
+       (pct>0&&!done?'<span class="pcttag">'+pct+'%</span>':'')+'</button>';
+  });
+  if(nx){
+    h+='<div style="margin-top:16px"><button class="btn teal" data-startset="'+nx.cat.k+':'+nx.idx+'">'+
+       'Continue — set '+(nx.idx+1)+' of '+nx.cat.name.split(" ")[0]+'</button></div>';
+  } else {
+    h+='<div class="card" style="margin-top:16px"><p style="font-size:14px;line-height:1.55;color:var(--text-secondary)">'+
+       'All eight chapters cleared — every one of the 128 has been taught and tested. Drill and Exam are where it stays sharp now.</p></div>';
+  }
+  h+='<p style="font-size:11.5px;color:var(--text-muted);text-align:center;margin-top:14px;line-height:1.5">'+
+     total+' of 128 learned · clearing a set puts its questions into the drill rotation</p>';
+  return h+'</div>';
+}
+function screenChapter(){
+  var c=ctx.cat, sets=setsOf(c.k), cleared=clearedSets(c.k).length;
+  var qs=Q.filter(function(q){return q.cat===c.k;}).length;
+  var learned=0; clearedSets(c.k).forEach(function(i){ learned+=(sets[i]||[]).length; });
+  var pct=Math.round(cleared/sets.length*100);
+  var pick = ctx.pick!=null ? ctx.pick : (function(){ for(var i=0;i<sets.length;i++) if(!isCleared(c.k,i)) return i; return 0; })();
+  var h='<div class="fade"><div class="card">'+
+    '<div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px">'+
+      '<span class="micro">Chapter '+(CATS.indexOf(c)+1)+' of 8</span>'+
+      '<span class="pcttag">'+learned+' / '+qs+' learned</span></div>'+
+    '<div class="minibar" style="margin-top:10px"><i style="width:'+pct+'%;background:linear-gradient(90deg,#0d9488,#2dd4bf)"></i></div>'+
+    '<div class="sets">';
+  sets.forEach(function(ids,i){
+    var cls = isCleared(c.k,i)?"done":(i===pick?"now":"");
+    h+='<button class="setchip '+cls+'" data-pickset="'+i+'">'+(i+1)+
+       '<small>'+(isCleared(c.k,i)?"done":ids.length+"q")+'</small></button>';
+  });
+  h+='</div></div>';
+  var ids=sets[pick]||[];
+  h+='<div class="card" style="margin-top:12px"><span class="micro">Set '+(pick+1)+' — what\'s in it</span>'+
+     '<div style="margin-top:9px">'+
+     ids.map(function(id){
+       var q=BY_ID[id], b=boxOf(id);
+       var col = b>=4?"var(--success)":b>=2?"var(--warning)":"rgba(120,130,150,.25)";
+       return '<div class="qrow"><span class="mdot" style="background:'+col+'"></span>'+
+              '<span class="qn">'+id+'</span><div style="flex:1;min-width:0"><div class="qq">'+esc(q.q)+'</div></div></div>';
+     }).join("")+'</div></div>'+
+     '<div style="margin-top:16px"><button class="btn teal" data-startset="'+c.k+':'+pick+'">'+
+     (isCleared(c.k,pick)?"Redo set "+(pick+1):"Start set "+(pick+1))+'</button></div>'+
+     '<div style="margin-top:9px"><button class="btn ghost" data-go="learn">Back to chapters</button></div></div>';
+  return h;
+}
+function startSet(cat,idx){
+  var ids=setsOf(cat)[idx]||[];
+  go("set",{cat:CATS.filter(function(c){return c.k===cat;})[0], idx:idx, ids:ids,
+            phase:"learn", i:0, queue:[], reteach:null, correct:0, misses:0, mc:null});
+}
+function screenSet(){
+  var c=ctx.cat, n=ctx.ids.length;
+  var h='<div class="fade">';
+  if(ctx.phase==="learn"){
+    var q=BY_ID[ctx.ids[ctx.i]];
+    h+='<div class="phase"><span class="phasepill learn">Learning</span><div class="dots">'+
+       ctx.ids.map(function(_,i){ return '<span class="pdot'+(i<=ctx.i?" on":"")+'"></span>'; }).join("")+'</div></div>'+
+       teachCard(q)+
+       '<div style="margin-top:18px"><button class="btn teal" data-learned="1">'+
+       (ctx.i>=n-1?"Now lock them in":"Got it")+'</button></div>'+
+       '<p class="hint">'+(ctx.i>=n-1
+          ? 'All '+n+' seen. Next you answer them.'
+          : (n-1-ctx.i)+' more to learn, then '+n+' to lock in.')+'</p>';
+    return h+'</div>';
+  }
+  if(ctx.reteach){
+    var rq=BY_ID[ctx.reteach];
+    h+='<div class="phase"><span class="phasepill learn">Back to this one</span></div>'+
+       teachCard(rq)+
+       '<div style="margin-top:18px"><button class="btn teal" data-retaught="1">Try it again</button></div>'+
+       '<p class="hint">A miss is re-taught before it comes back.</p>';
+    return h+'</div>';
+  }
+  var qq=BY_ID[ctx.queue[0]], mc=ctx.mc;
+  h+='<div class="phase"><span class="phasepill lock">Locking in</span><div class="dots">'+
+     ctx.ids.map(function(id,i){
+       var solved = ctx.queue.indexOf(id)<0;
+       return '<span class="pdot'+(solved?" ok":(id===ctx.queue[0]?" on":""))+'"'+
+              (id===ctx.queue[0]?' style="background:var(--accent-light)"':'')+'></span>';
+     }).join("")+'</div></div>'+
+     '<div class="qtext" style="font-size:20px;margin-bottom:18px">'+esc(qq.q)+'</div>';
+  if(!mc){
+    var ans=answersFor(qq);
+    h+='<div class="revealbox" style="margin-top:0"><div class="micro">Accepted answers</div><ul>'+
+       (ans.length?ans.slice(0,6).map(function(a){return '<li>'+esc(a)+'</li>';}).join(""):'<li>Set this in Settings</li>')+
+       '</ul></div><div class="row" style="margin-top:16px">'+
+       '<button class="btn good" data-lock="1">'+svg(ICON.check,16,2.2)+'I knew it</button>'+
+       '<button class="btn ghost" data-lock="0">'+svg(ICON.x,16,2.2)+'I didn\'t</button></div>';
+    return h+'</div>';
+  }
+  h+='<div class="opts" style="margin-top:0">';
+  mc.opts.forEach(function(o,i){
+    var cls="opt";
+    if(ctx.answered){ if(o.ok) cls+=" right"; else if(ctx.sel===i) cls+=" chosen-wrong"; else cls+=" dim"; }
+    h+='<button class="'+cls+'" data-setopt="'+i+'"><span class="key">'+
+       (ctx.answered&&o.ok?"✓":String.fromCharCode(65+i))+'</span><span>'+esc(o.text)+'</span></button>';
+  });
+  h+='</div>';
+  if(ctx.answered){
+    h+= ctx.wasRight
+      ? '<div class="feedback ok" style="margin-top:15px"><span style="color:var(--success);margin-top:1px">'+svg(ICON.check,16,2.2)+'</span>'+
+        '<div><div class="t">Locked in</div></div></div>'+
+        '<div style="margin-top:16px"><button class="btn teal" data-setnext="1">'+
+        (ctx.queue.length<=1?"Finish set":"Next")+'</button></div>'
+      : '<div class="requeue" style="margin-top:15px"><span style="color:var(--warning);margin-top:1px">'+svg(ICON.info,15,1.9)+'</span>'+
+        '<div><div class="t">Not quite — this one comes back</div>'+
+        '<div class="d">You\'ll see it taught again, then asked again. The set won\'t close with a hole in it.</div></div></div>'+
+        '<div style="margin-top:16px"><button class="btn teal" data-setnext="1">Show me again</button></div>';
+  }
+  return h+'</div>';
+}
+function teachCard(q){
+  var ans=answersFor(q), primary = ans.length?ans[0]:"Set this in Settings";
+  var alt = ans.slice(1,4);
+  var body = q.story ? q.story : (q.hook?[q.hook]:[]);
+  return '<div class="teachq">'+esc(q.q)+'</div>'+
+    '<div class="teacha">'+esc(primary)+'</div>'+
+    (alt.length?'<div class="teachalt">Also accepted: '+esc(alt.join(" · "))+'</div>':'')+
+    (body.length?'<div class="hook"><div class="lbl">'+svg(ICON.quill,12,2)+
+      (q.story?"The story behind it":"Why it's the answer")+'</div>'+
+      body.map(function(p){return '<p>'+esc(p)+'</p>';}).join("")+'</div>':'');
+}
+function advanceLearn(){
+  if(ctx.i < ctx.ids.length-1){ ctx.i++; return render(); }
+  ctx.phase="lock"; ctx.queue=shuffle(ctx.ids); ctx.answered=false; ctx.sel=null;
+  ctx.mc=buildMC(BY_ID[ctx.queue[0]]); render();
+}
+function answerSet(idx){
+  if(ctx.answered) return;
+  var q=BY_ID[ctx.queue[0]];
+  var ok = idx===null ? ctx.selfOK : ctx.mc.opts[idx].ok;
+  ctx.sel=idx; ctx.answered=true; ctx.wasRight=ok;
+  if(ok){ ctx.correct++; setBox(q.id, Math.max(boxOf(q.id), 2)); S.xp+=25; }
+  else { ctx.misses++; }
+  markDay(); save(); render();
+}
+function setNext(){
+  var id=ctx.queue[0];
+  if(ctx.wasRight){
+    ctx.queue.shift();
+    if(!ctx.queue.length) return finishSet();
+  } else {
+    ctx.queue.shift(); ctx.queue.push(id);   // back to the end, re-taught first
+    ctx.reteach=id;
+  }
+  ctx.answered=false; ctx.sel=null;
+  if(!ctx.reteach) ctx.mc=buildMC(BY_ID[ctx.queue[0]]);
+  render();
+}
+function finishSet(){
+  var k=ctx.cat.k;
+  S.learn[k]=S.learn[k]||[];
+  if(S.learn[k].indexOf(ctx.idx)<0) S.learn[k].push(ctx.idx);
+  ctx.ids.forEach(function(id){ setBox(id, Math.max(boxOf(id),2)); });
+  S.xp += 75;
+  save();
+  go("result",{learn:true, cat:ctx.cat, idx:ctx.idx, n:ctx.ids.length, misses:ctx.misses,
+               chapterDone:chapterDone(k)});
 }
 
 /* ---- DRILL ---- */
@@ -1068,6 +1448,24 @@ function gradeExam(ok){
 
 /* ---- RESULT ---- */
 function screenResult(){
+  if(ctx.learn){
+    var nx=nextSet(), clean=ctx.misses===0;
+    return '<div class="fade"><div class="verdict">'+
+      '<div class="stamp pass pop"><span>'+(ctx.chapterDone?"★":"✓")+'</span></div>'+
+      '<h2>'+(ctx.chapterDone?"Chapter cleared.":"Set "+(ctx.idx+1)+" cleared.")+'</h2>'+
+      '<p>'+ctx.n+' questions taught and answered'+(clean?' with nothing missed.':', '+ctx.misses+' re-taught along the way.')+
+      (ctx.chapterDone?' That\'s all of '+esc(ctx.cat.name)+'.':'')+'</p></div>'+
+      '<div class="scoreline">'+
+        '<div class="scorebox"><div class="v" style="color:var(--success)">'+ctx.n+'</div><div class="l">Learned</div></div>'+
+        '<div class="scorebox"><div class="v">'+learnedCount()+'</div><div class="l">Of 128</div></div>'+
+        '<div class="scorebox"><div class="v" style="color:var(--accent-light)">+'+(ctx.n*25+75)+'</div><div class="l">XP</div></div>'+
+      '</div>'+
+      '<div class="card"><p style="font-size:13.5px;line-height:1.6;color:var(--text-secondary)">'+
+        'These '+ctx.n+' are now in the drill rotation. Daily Drill will start serving them back to you — that\'s what turns learned into mastered.</p></div>'+
+      (nx?'<div style="margin-top:16px"><button class="btn teal" data-startset="'+nx.cat.k+':'+nx.idx+'">'+
+        (nx.cat.k===ctx.cat.k?"Next set":"Start "+esc(nx.cat.name))+'</button></div>':'')+
+      '<div style="margin-top:9px"><button class="btn ghost" data-go="learn">Back to chapters</button></div></div>';
+  }
   if(ctx.drill){
     var perfect = ctx.lives>0 && ctx.correct===ctx.total;
     return '<div class="fade"><div class="verdict">'+
@@ -1183,13 +1581,23 @@ document.addEventListener("click", function(e){
   // match the root, and re-render the app — which silently killed focus on
   // every text input in Settings and Study. Control attributes must not
   // collide with styling attributes. Hence data-pick-theme.
-  var t=e.target.closest("[data-go],[data-tab],[data-start],[data-opt],[data-next],[data-submit],[data-reveal],[data-grade],[data-cat],[data-pick-theme],[data-reset],[data-quit],[data-drillmissed]");
+  var t=e.target.closest("[data-go],[data-tab],[data-start],[data-opt],[data-next],[data-submit],[data-reveal],[data-grade],[data-cat],[data-pick-theme],[data-reset],[data-quit],[data-drillmissed],[data-chapter],[data-pickset],[data-startset],[data-learned],[data-retaught],[data-setopt],[data-setnext],[data-lock]");
   if(!t || t===document.documentElement) return;
   var d=t.dataset;
   if(d.go) return go(d.go);
   if(d.tab){ if(d.tab==="drill") return startDrill(); if(d.tab==="exam") return startExam(); return go(d.tab); }
   if(d.start){ if(d.start==="drill") return startDrill(); if(d.start==="exam") return startExam(); return go(d.start); }
-  if(d.quit){ stopTimer(); return go("home"); }
+  if(d.quit){ stopTimer(); return go(view==="set" ? "chapter" : "home", view==="set" ? {cat:ctx.cat, pick:ctx.idx} : null); }
+
+  // --- Learn ---
+  if(d.chapter){ return go("chapter",{cat:CATS.filter(function(c){return c.k===d.chapter;})[0]}); }
+  if(d.pickset!==undefined){ ctx.pick=+d.pickset; return render(); }
+  if(d.startset){ var p=d.startset.split(":"); return startSet(p[0], +p[1]); }
+  if(d.learned) return advanceLearn();
+  if(d.retaught){ ctx.reteach=null; ctx.mc=buildMC(BY_ID[ctx.queue[0]]); return render(); }
+  if(d.setopt!==undefined) return answerSet(+d.setopt);
+  if(d.lock!==undefined){ ctx.selfOK = d.lock==="1"; return answerSet(null); }
+  if(d.setnext) return setNext();
   if(d.opt!==undefined){
     var i=+d.opt;
     if(ctx.answered) return;
@@ -1339,6 +1747,61 @@ function selfTest(){
   ok("every state answer has a default",
      ["stateName","senators","rep","governor","capital"].every(function(k){ return !!DEFAULTS[k]; }));
 
+  // --- Learn mode ---
+  // Every question must have exactly one thing to teach with. A question with
+  // neither renders a bare answer (the read-the-list problem Learn exists to
+  // fix); a question with both means duplicated, drifting copy.
+  var noTeach=[], bothTeach=[];
+  Q.forEach(function(q){
+    if(!q.story && !q.hook) noTeach.push(q.id);
+    if(q.story && q.hook)  bothTeach.push(q.id);
+  });
+  ok("every question has something to teach ("+noTeach.join(", ")+")", noTeach.length===0);
+  ok("no question has both a story and a hook ("+bothTeach.join(", ")+")", bothTeach.length===0);
+  ok("86 hooks", Object.keys(HOOK).length===86);
+  ok("42 stories + 86 hooks == 128", Object.keys(STORY).length+Object.keys(HOOK).length===128);
+  ok("every hook maps to a real question",
+     Object.keys(HOOK).every(function(id){ return !!BY_ID[+id]; }));
+
+  // Set partition: every question appears in exactly one set of its chapter.
+  var seenIds={}, dupes=[], setSizes=[];
+  CATS.forEach(function(c){
+    var sets=setsOf(c.k);
+    sets.forEach(function(ids){
+      setSizes.push(ids.length);
+      ids.forEach(function(id){ if(seenIds[id]) dupes.push(id); seenIds[id]=1; });
+    });
+    var flat=[].concat.apply([],sets);
+    ok("chapter "+c.k+" covers its own questions",
+       flat.length===Q.filter(function(q){return q.cat===c.k;}).length);
+  });
+  ok("sets cover all 128 exactly once", Object.keys(seenIds).length===128 && dupes.length===0);
+  ok("no set is empty", setSizes.every(function(n){ return n>0; }));
+  ok("no set exceeds the target size", setSizes.every(function(n){ return n<=SET_TARGET; }));
+  ok("no straggler set of one", setSizes.every(function(n){ return n>1; }) || setSizes.length===1);
+  ok("sets are in question order", CATS.every(function(c){
+       var flat=[].concat.apply([],setsOf(c.k));
+       return flat.every(function(id,i){ return i===0 || id>flat[i-1]; });
+     }));
+  ok("nextSet finds the first uncleared set on a fresh profile",
+     (function(){ var keep=S.learn; S.learn={}; var n=nextSet();
+                  var okv = n && n.cat.k===CATS[0].k && n.idx===0; S.learn=keep; return okv; })());
+  ok("a cleared chapter is skipped by nextSet",
+     (function(){ var keep=S.learn; S.learn={};
+                  S.learn[CATS[0].k]=setsOf(CATS[0].k).map(function(_,i){return i;});
+                  var n=nextSet(); var okv = n && n.cat.k===CATS[1].k; S.learn=keep; return okv; })());
+  ok("learnedCount is zero on a fresh profile",
+     (function(){ var keep=S.learn; S.learn={}; var v=learnedCount(); S.learn=keep; return v===0; })());
+
+  // Rendered-size guard. Learn's progress dots were first written as `.dot`,
+  // which is also the tab bar's icon wrapper — it shrank every tab icon to 6px
+  // and overlapped the labels. Assert the real rendered box, not the source.
+  ok("tab icons render at full size (no class collision)", (function(){
+    var d=document.querySelector("#tabbar .tab .dot");
+    if(!d) return true;                       // tab bar hidden during a quiz
+    return Math.round(d.getBoundingClientRect().width) >= 18;
+  })());
+
   var res={total:n, failed:fail, failures:out};
   window.civicsTests=res;
   if(fail) console.error("Civics self-tests: "+fail+" of "+n+" FAILED", out);
@@ -1348,8 +1811,8 @@ function selfTest(){
 
 /* ---- boot ---- */
 load();
-selfTest();
 render();
+selfTest();   // after render: some checks assert rendered geometry, not source
 
 /* Offline support. Registration is best-effort: on file:// there is no SW and
    the app must still run, so a failure here is swallowed by design. */
