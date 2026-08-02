@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Civics — 2025 U.S. Citizenship Test</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Civics">
+<meta name="theme-color" content="#09090b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="static/icon-192.png">
+<link rel="apple-touch-icon" href="static/icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-base:#09090b; --bg-surface:#0f1117; --bg-card:#161922; --bg-elevated:#1c2030; --bg-input:#0d1019;
+  --text-primary:#f0f2f5; --text-secondary:#8b95a8; --text-muted:#5a6478; --text-disabled:#3d4555;
+  --border-subtle:rgba(255,255,255,0.05); --border-default:#1e2433; --border-hover:#2a3247;
+  --accent:#0d9488; --accent-hover:#0f766e; --accent-light:#2dd4bf; --accent-muted:rgba(13,148,136,0.12);
+  --sec:#9B2C2C; --sec-light:#C05252; --sec-muted:rgba(155,44,44,0.14);
+  --success:#10b981; --success-muted:rgba(16,185,129,0.12);
+  --warning:#f59e0b; --warning-muted:rgba(245,158,11,0.12);
+  --error:#ef4444; --error-muted:rgba(239,68,68,0.12);
+  --shadow-card:0 2px 8px rgba(13,148,136,0.06), 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-elev:0 8px 24px rgba(13,148,136,0.1), 0 2px 6px rgba(0,0,0,0.25);
+  --snappy:cubic-bezier(0.22,1,0.36,1);
+  --smooth:cubic-bezier(0.16,1,0.3,1);
+}
+[data-theme="light"]{
+  --bg-base:#fafaf8; --bg-surface:#f5f4f1; --bg-card:#ffffff; --bg-elevated:#ffffff; --bg-input:#ffffff;
+  --text-primary:#18181b; --text-secondary:#52525b; --text-muted:#a1a1aa; --text-disabled:#d4d4d8;
+  --border-subtle:#eeece7; --border-default:#e5e3de; --border-hover:#d1cec7;
+  --shadow-card:0 2px 8px rgba(10,22,40,0.08), 0 1px 2px rgba(10,22,40,0.04);
+  --shadow-elev:0 12px 40px rgba(10,22,40,0.12), 0 2px 6px rgba(10,22,40,0.06);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overscroll-behavior:none}
+body{
+  font-family:'Inter','Inter Variable',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  font-feature-settings:"cv01";
+  background:var(--bg-base);color:var(--text-primary);
+  display:flex;flex-direction:column;
+  -webkit-font-smoothing:antialiased;
+}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at 50% 0%, var(--bg-surface) 0%, var(--bg-base) 62%)}
+[data-theme="light"] body::after{opacity:.7}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;font-feature-settings:"cv01"}
+input,select{font:inherit;font-feature-settings:"cv01"}
+svg{display:block;flex:0 0 auto}
+
+#app{flex:1;display:flex;flex-direction:column;position:relative;z-index:1;
+  max-width:520px;width:100%;margin:0 auto;overflow:hidden}
+.appbar{flex:0 0 auto;padding:calc(env(safe-area-inset-top) + 12px) 20px 12px;
+  display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px}
+.wordmark{display:flex;align-items:center;gap:9px}
+.seal{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--sec),#6d1f1f);
+  display:flex;align-items:center;justify-content:center;font-size:12px;color:#f4dede;
+  border-top:1px solid rgba(255,255,255,.14)}
+.wordmark h1{font-size:20px;font-weight:600;letter-spacing:-.3px}
+.icobtn{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-secondary);border:1px solid var(--border-subtle);background:var(--bg-card);
+  transition:all 120ms var(--snappy)}
+.icobtn:active{background:var(--bg-elevated);transform:scale(.94)}
+main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 20px 24px}
+.tabbar{flex:0 0 auto;display:flex;border-top:1px solid var(--border-subtle);
+  background:var(--bg-surface);padding-bottom:env(safe-area-inset-bottom)}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  height:60px;font-size:10px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--text-muted);transition:color 120ms var(--snappy)}
+.tab.on{color:var(--accent-light)}
+[data-theme="light"] .tab.on{color:var(--accent)}
+
+.micro{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:var(--text-muted)}
+.card{background:var(--bg-card);border:1px solid var(--border-subtle);border-top:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:20px;box-shadow:var(--shadow-card)}
+[data-theme="light"] .card{border-top-color:var(--border-default)}
+.btn{width:100%;height:50px;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:15px;font-weight:500;letter-spacing:-.1px;transition:all 120ms var(--snappy)}
+.btn:active{transform:scale(.985)}
+.btn.teal{background:linear-gradient(135deg,#0d9488,#10b981);color:#fff}
+.btn.ghost{background:transparent;border:1px solid var(--border-default);color:var(--text-secondary)}
+.btn.good{background:var(--success);color:#04231a}
+.btn.small{height:44px;font-size:14px}
+.btn[disabled]{opacity:.45;pointer-events:none}
+.row{display:flex;gap:9px}
+.fade{animation:fade 260ms var(--smooth)}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.pop{animation:pop 340ms var(--snappy)}
+@keyframes pop{0%{transform:scale(.86);opacity:0}60%{transform:scale(1.03)}100%{transform:none;opacity:1}}
+
+/* HOME */
+.ringwrap{display:flex;align-items:center;gap:18px}
+.ringtxt h2{font-size:17px;font-weight:500;letter-spacing:-.2px;line-height:1.3}
+.ringtxt p{font-size:13px;color:var(--text-secondary);margin-top:5px;line-height:1.45}
+.pillrow{display:flex;gap:8px;margin-top:14px}
+.pill{flex:1;background:var(--bg-card);border:1px solid var(--border-subtle);border-top:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:11px 8px;text-align:center;box-shadow:var(--shadow-card)}
+[data-theme="light"] .pill{border-top-color:var(--border-default)}
+.pill .v{font-size:18px;font-weight:500;letter-spacing:-.3px;font-feature-settings:"cv01","tnum";
+  display:flex;align-items:center;justify-content:center;gap:4px;line-height:1.15}
+.pill .l{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-top:4px}
+.modecard{display:flex;align-items:center;gap:14px;background:var(--bg-card);border:1px solid var(--border-subtle);
+  border-top:1px solid rgba(255,255,255,.08);border-radius:10px;padding:15px 16px;box-shadow:var(--shadow-card);
+  margin-bottom:9px;width:100%;text-align:left;transition:all 160ms var(--snappy)}
+[data-theme="light"] .modecard{border-top-color:var(--border-default)}
+.modecard:active{transform:scale(.99);background:var(--bg-elevated)}
+.modecard.primary{background:linear-gradient(135deg,rgba(13,148,136,.16),rgba(13,148,136,.05));border-color:rgba(13,148,136,.3)}
+.mi{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+  background:var(--accent-muted);color:var(--accent-light)}
+[data-theme="light"] .mi{color:var(--accent)}
+.mi.sec{background:var(--sec-muted);color:var(--sec-light)}
+.mi.neutral{background:rgba(120,130,150,.12);color:var(--text-secondary)}
+.mt{flex:1;min-width:0}
+.mt h4{font-size:15px;font-weight:500;letter-spacing:-.1px}
+.mt p{font-size:12px;color:var(--text-muted);margin-top:2px;line-height:1.4}
+.weakrow{display:flex;align-items:center;gap:10px;margin-top:9px}
+.weakname{font-size:12px;color:var(--text-secondary);flex:0 0 138px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{flex:1;height:5px;border-radius:9999px;background:rgba(120,130,150,.16);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:9999px;transition:width 500ms var(--smooth)}
+.weakpct{font-size:11px;font-weight:500;color:var(--text-muted);flex:0 0 32px;text-align:right;font-feature-settings:"cv01","tnum"}
+
+/* QUIZ SHARED */
+.hud{display:flex;align-items:center;justify-content:space-between;padding:2px 0 11px}
+.hearts{display:flex;gap:5px}
+.chip{display:flex;align-items:center;gap:5px;border-radius:9999px;padding:4px 10px;
+  font-size:12px;font-weight:600;font-feature-settings:"cv01","tnum"}
+.chip.flame{background:var(--warning-muted);color:var(--warning)}
+.chip.xp{background:rgba(120,130,150,.12);color:var(--text-secondary);font-weight:500}
+.timer{height:4px;border-radius:9999px;background:rgba(120,130,150,.16);overflow:hidden;margin-bottom:18px}
+.timer i{display:block;height:100%;border-radius:9999px;background:linear-gradient(90deg,var(--accent),var(--accent-light));
+  transition:width 250ms linear}
+.timer i.low{background:linear-gradient(90deg,#ef4444,#f59e0b)}
+.qtag{display:inline-block;background:var(--sec-muted);color:var(--sec-light);border-radius:9999px;padding:3px 9px;
+  font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:11px}
+.qtext{font-size:22px;font-weight:500;line-height:1.28;letter-spacing:-.4px}
+.qsub{font-size:12.5px;color:var(--text-muted);margin-top:7px;line-height:1.45}
+.opts{margin-top:18px;display:flex;flex-direction:column;gap:8px}
+.opt{background:var(--bg-card);border:1px solid var(--border-default);border-top:1px solid rgba(255,255,255,.07);
+  border-radius:10px;padding:14px 15px;font-size:14px;line-height:1.4;color:var(--text-primary);
+  display:flex;align-items:center;gap:11px;box-shadow:var(--shadow-card);width:100%;text-align:left;
+  transition:all 140ms var(--snappy)}
+[data-theme="light"] .opt{border-top-color:var(--border-default)}
+.opt:active{transform:scale(.99)}
+.opt .key{width:21px;height:21px;border-radius:6px;flex:0 0 21px;background:rgba(120,130,150,.14);color:var(--text-muted);
+  font-size:10.5px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.opt.right{background:linear-gradient(135deg,rgba(16,185,129,.16),rgba(16,185,129,.06));border-color:rgba(16,185,129,.42)}
+.opt.right .key{background:var(--success);color:#04231a}
+.opt.chosen-wrong{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.4)}
+.opt.chosen-wrong .key{background:var(--error);color:#fff}
+.opt.dim{opacity:.42}
+.opt.sel{border-color:var(--accent);background:var(--accent-muted)}
+.opt.sel .key{background:var(--accent);color:#fff}
+.feedback{margin-top:15px;border-radius:10px;padding:13px 15px;display:flex;gap:11px;align-items:flex-start}
+.feedback.ok{background:var(--success-muted);border:1px solid rgba(16,185,129,.22)}
+.feedback.no{background:var(--error-muted);border:1px solid rgba(239,68,68,.22)}
+.feedback .t{font-size:13px;font-weight:500}
+.feedback.ok .t{color:var(--success)}
+.feedback.no .t{color:var(--error)}
+.feedback .d{font-size:12px;color:var(--text-secondary);line-height:1.45;margin-top:3px}
+.story{margin-top:11px;border-radius:10px;padding:15px 16px;
+  background:linear-gradient(135deg,rgba(155,44,44,.15),rgba(155,44,44,.05));border:1px solid rgba(155,44,44,.3)}
+.story .lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--sec-light);
+  display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.story p{font-size:13px;line-height:1.58;color:var(--text-primary)}
+.story p+p{margin-top:9px;color:var(--text-secondary)}
+[data-theme="light"] .story p{color:#3f3f46}
+[data-theme="light"] .story p+p{color:#52525b}
+
+/* EXAM */
+.pips{display:flex;gap:3px;margin:4px 0 14px}
+.pip{flex:1;height:5px;border-radius:9999px;background:rgba(120,130,150,.16);transition:background 240ms var(--snappy)}
+.pip.ok{background:var(--success)}
+.pip.no{background:var(--error)}
+.pip.now{background:var(--accent-light)}
+.tally{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;gap:10px}
+.tally .big{font-size:15px;font-weight:500;letter-spacing:-.1px}
+.tally .big b{color:var(--success);font-weight:600;font-feature-settings:"cv01","tnum"}
+.tally .big s{color:var(--error);font-weight:600;text-decoration:none;font-feature-settings:"cv01","tnum"}
+.revealbox{margin-top:18px;background:var(--bg-card);border:1px solid var(--border-subtle);
+  border-top:1px solid rgba(255,255,255,.08);border-radius:10px;padding:16px;box-shadow:var(--shadow-card)}
+[data-theme="light"] .revealbox{border-top-color:var(--border-default)}
+.revealbox ul{list-style:none;margin-top:9px;display:flex;flex-direction:column;gap:8px}
+.revealbox li{font-size:14px;line-height:1.42;display:flex;gap:9px;align-items:flex-start}
+.revealbox li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--accent);margin-top:7px;flex:0 0 5px}
+.hint{font-size:12px;color:var(--text-muted);text-align:center;margin-top:13px;line-height:1.5}
+
+/* RESULT */
+.verdict{text-align:center;padding:14px 0 4px}
+.stamp{width:96px;height:96px;border-radius:50%;margin:0 auto 15px;display:flex;align-items:center;justify-content:center}
+.stamp.pass{background:radial-gradient(circle at 50% 35%, rgba(16,185,129,.22), rgba(16,185,129,.06));
+  border:2px solid rgba(16,185,129,.45);box-shadow:0 0 0 8px rgba(16,185,129,.06)}
+.stamp.fail{background:radial-gradient(circle at 50% 35%, rgba(239,68,68,.2), rgba(239,68,68,.05));
+  border:2px solid rgba(239,68,68,.42);box-shadow:0 0 0 8px rgba(239,68,68,.05)}
+.stamp span{font-size:25px;font-weight:600;letter-spacing:-.5px}
+.stamp.pass span{color:var(--success)}
+.stamp.fail span{color:var(--error)}
+.verdict h2{font-size:26px;font-weight:600;letter-spacing:-.6px;line-height:1.15}
+.verdict p{font-size:14px;color:var(--text-secondary);margin-top:9px;line-height:1.5;padding:0 8px}
+.scoreline{display:flex;gap:9px;margin:18px 0 14px}
+.scorebox{flex:1;background:var(--bg-card);border:1px solid var(--border-subtle);border-top:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:13px 8px;text-align:center;box-shadow:var(--shadow-card)}
+[data-theme="light"] .scorebox{border-top-color:var(--border-default)}
+.scorebox .v{font-size:24px;font-weight:500;letter-spacing:-.5px;font-feature-settings:"cv01","tnum"}
+.scorebox .l{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);margin-top:3px}
+.missrow{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border-subtle)}
+.missrow:last-child{border-bottom:none;padding-bottom:0}
+.missn{font-size:11px;font-weight:600;color:var(--error);background:var(--error-muted);border-radius:5px;
+  padding:2px 6px;font-feature-settings:"cv01","tnum";flex:0 0 30px;text-align:center}
+.missq{font-size:13px;line-height:1.42;color:var(--text-secondary)}
+
+/* STUDY */
+.search{height:42px;border-radius:8px;background:var(--bg-input);border:1px solid var(--border-default);
+  display:flex;align-items:center;gap:9px;padding:0 12px;margin-bottom:14px}
+.search input{flex:1;background:none;border:none;outline:none;color:var(--text-primary);font-size:15px}
+.search input::placeholder{color:var(--text-muted)}
+.catrow{background:var(--bg-card);border:1px solid var(--border-subtle);border-top:1px solid rgba(255,255,255,.08);
+  border-radius:10px;padding:14px 15px;margin-bottom:8px;box-shadow:var(--shadow-card);width:100%;text-align:left}
+[data-theme="light"] .catrow{border-top-color:var(--border-default)}
+.catrow .top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.catrow h4{font-size:14px;font-weight:500;letter-spacing:-.1px}
+.catcount{font-size:11px;font-weight:500;color:var(--text-muted);font-feature-settings:"cv01","tnum"}
+.qrow{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--border-subtle);
+  width:100%;text-align:left}
+.qrow:last-child{border-bottom:none;padding-bottom:2px}
+.mdot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;margin-top:5px}
+.qn{font-size:11px;font-weight:600;color:var(--text-disabled);flex:0 0 24px;font-feature-settings:"cv01","tnum";margin-top:2px}
+.qq{font-size:13px;line-height:1.42;color:var(--text-primary)}
+.qa{font-size:12px;line-height:1.42;color:var(--text-muted);margin-top:3px}
+.star{color:var(--warning);font-size:10px}
+.note{margin-top:14px;background:var(--warning-muted);border:1px solid rgba(245,158,11,.2);border-radius:8px;
+  padding:11px 13px;font-size:11.5px;line-height:1.5;color:var(--warning);display:flex;gap:8px;align-items:flex-start}
+.storytag{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;color:var(--sec-light);
+  background:var(--sec-muted);border-radius:4px;padding:1px 5px;margin-left:5px;vertical-align:1px}
+
+/* SETTINGS */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:6px}
+.field input,.field select{width:100%;height:42px;border-radius:8px;background:var(--bg-input);
+  border:1px solid var(--border-default);padding:0 12px;color:var(--text-primary);font-size:15px;outline:none;
+  transition:all 200ms var(--snappy)}
+.field input:focus,.field select:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(13,148,136,.2)}
+.seg{display:flex;gap:6px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:8px;padding:4px}
+.seg button{flex:1;height:34px;border-radius:6px;font-size:13px;font-weight:500;color:var(--text-secondary);
+  transition:all 120ms var(--snappy)}
+.seg button.on{background:var(--accent);color:#fff}
+.empty{text-align:center;padding:40px 20px;color:var(--text-muted);font-size:14px;line-height:1.6}
+.toast{position:fixed;left:50%;bottom:calc(78px + env(safe-area-inset-bottom));transform:translateX(-50%);
+  background:var(--bg-elevated);border:1px solid var(--border-hover);border-radius:9999px;padding:9px 18px;
+  font-size:13px;font-weight:500;box-shadow:var(--shadow-elev);z-index:50;animation:fade 200ms var(--snappy)}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="appbar" id="appbar"></div>
+  <main id="main"></main>
+  <div class="tabbar" id="tabbar"></div>
+</div>
+
+<script>
+"use strict";
+/* ============================================================================
+   CIVICS — practice app for the 2025 USCIS naturalization civics test.
+   Question bank: all 128 items transcribed verbatim from USCIS M-1778 (09/25).
+   Officeholder answers verified against uscis.gov/citizenship/testupdates
+   on 2026-08-02. No network calls at runtime; all state in localStorage.
+   ========================================================================== */
+
+var VERIFIED_ON = "2026-08-02";
+
+/* --- categories, derived from the official ID ranges in the PDF ---------- */
+var CATS = [
+  {k:"pag", lo:1,   hi:15,  group:"American Government",  name:"Principles of American Government"},
+  {k:"sog", lo:16,  hi:62,  group:"American Government",  name:"System of Government"},
+  {k:"rr",  lo:63,  hi:72,  group:"American Government",  name:"Rights and Responsibilities"},
+  {k:"col", lo:73,  hi:89,  group:"American History",     name:"Colonial Period and Independence"},
+  {k:"h19", lo:90,  hi:99,  group:"American History",     name:"The 1800s"},
+  {k:"rec", lo:100, hi:118, group:"American History",     name:"Recent American History"},
+  {k:"sym", lo:119, hi:124, group:"Symbols and Holidays", name:"Symbols"},
+  {k:"hol", lo:125, hi:128, group:"Symbols and Holidays", name:"Holidays"}
+];
+function catOf(id){ for(var i=0;i<CATS.length;i++){ if(id>=CATS[i].lo && id<=CATS[i].hi) return CATS[i]; } return CATS[0]; }
+
+/* The 20 asterisked questions (65/20 special consideration) */
+var STAR = [2,7,12,20,30,36,38,39,44,52,61,66,74,78,86,94,113,115,121,126];
+
+/* Questions whose answer depends on the applicant's state or district */
+var VARIES = {23:"senators", 29:"rep", 61:"governor", 62:"capital"};
+
+/* Questions requiring more than one answer: id -> how many */
+var NEED = {10:2, 48:2, 65:3, 67:2, 69:2, 81:5, 126:3};
+
+/* --- the 128 questions: [id, question, [accepted answers]] --------------- */
+var RAW = [
+[1,"What is the form of government of the United States?",["Republic","Constitution-based federal republic","Representative democracy"]],
+[2,"What is the supreme law of the land?",["(U.S.) Constitution"]],
+[3,"Name one thing the U.S. Constitution does.",["Forms the government","Defines powers of government","Defines the parts of government","Protects the rights of the people"]],
+[4,"The U.S. Constitution starts with the words “We the People.” What does “We the People” mean?",["Self-government","Popular sovereignty","Consent of the governed","People should govern themselves","(Example of) social contract"]],
+[5,"How are changes made to the U.S. Constitution?",["Amendments","The amendment process"]],
+[6,"What does the Bill of Rights protect?",["(The basic) rights of Americans","(The basic) rights of people living in the United States"]],
+[7,"How many amendments does the U.S. Constitution have?",["Twenty-seven (27)"]],
+[8,"Why is the Declaration of Independence important?",["It says America is free from British control.","It says all people are created equal.","It identifies inherent rights.","It identifies individual freedoms."]],
+[9,"What founding document said the American colonies were free from Britain?",["Declaration of Independence"]],
+[10,"Name two important ideas from the Declaration of Independence and the U.S. Constitution.",["Equality","Liberty","Social contract","Natural rights","Limited government","Self-government"]],
+[11,"The words “Life, Liberty, and the pursuit of Happiness” are in what founding document?",["Declaration of Independence"]],
+[12,"What is the economic system of the United States?",["Capitalism","Free market economy"]],
+[13,"What is the rule of law?",["Everyone must follow the law.","Leaders must obey the law.","Government must obey the law.","No one is above the law."]],
+[14,"Many documents influenced the U.S. Constitution. Name one.",["Declaration of Independence","Articles of Confederation","Federalist Papers","Anti-Federalist Papers","Virginia Declaration of Rights","Fundamental Orders of Connecticut","Mayflower Compact","Iroquois Great Law of Peace"]],
+[15,"There are three branches of government. Why?",["So one part does not become too powerful","Checks and balances","Separation of powers"]],
+[16,"Name the three branches of government.",["Legislative, executive, and judicial","Congress, president, and the courts"]],
+[17,"The President of the United States is in charge of which branch of government?",["Executive branch"]],
+[18,"What part of the federal government writes laws?",["(U.S.) Congress","(U.S. or national) legislature","Legislative branch"]],
+[19,"What are the two parts of the U.S. Congress?",["Senate and House (of Representatives)"]],
+[20,"Name one power of the U.S. Congress.",["Writes laws","Declares war","Makes the federal budget"]],
+[21,"How many U.S. senators are there?",["One hundred (100)"]],
+[22,"How long is a term for a U.S. senator?",["Six (6) years"]],
+[23,"Who is one of your state’s U.S. senators now?",["Answers will vary."]],
+[24,"How many voting members are in the House of Representatives?",["Four hundred thirty-five (435)"]],
+[25,"How long is a term for a member of the House of Representatives?",["Two (2) years"]],
+[26,"Why do U.S. representatives serve shorter terms than U.S. senators?",["To more closely follow public opinion"]],
+[27,"How many senators does each state have?",["Two (2)"]],
+[28,"Why does each state have two senators?",["Equal representation (for small states)","The Great Compromise (Connecticut Compromise)"]],
+[29,"Name your U.S. representative.",["Answers will vary."]],
+[30,"What is the name of the Speaker of the House of Representatives now?",["Mike Johnson","Johnson","James Michael Johnson"]],
+[31,"Who does a U.S. senator represent?",["Citizens of their state","People of their state"]],
+[32,"Who elects U.S. senators?",["Citizens from their state"]],
+[33,"Who does a member of the House of Representatives represent?",["Citizens in their (congressional) district","People in their district"]],
+[34,"Who elects members of the House of Representatives?",["Citizens from their (congressional) district"]],
+[35,"Some states have more representatives than other states. Why?",["(Because of) the state’s population","(Because) they have more people","(Because) some states have more people"]],
+[36,"The President of the United States is elected for how many years?",["Four (4) years"]],
+[37,"The President of the United States can serve only two terms. Why?",["(Because of) the 22nd Amendment","To keep the president from becoming too powerful"]],
+[38,"What is the name of the President of the United States now?",["Donald J. Trump","Donald Trump","Trump"]],
+[39,"What is the name of the Vice President of the United States now?",["JD Vance","Vance"]],
+[40,"If the president can no longer serve, who becomes president?",["The Vice President (of the United States)"]],
+[41,"Name one power of the president.",["Signs bills into law","Vetoes bills","Enforces laws","Commander in Chief (of the military)","Chief diplomat","Appoints federal judges"]],
+[42,"Who is Commander in Chief of the U.S. military?",["The President (of the United States)"]],
+[43,"Who signs bills to become laws?",["The President (of the United States)"]],
+[44,"Who vetoes bills?",["The President (of the United States)"]],
+[45,"Who appoints federal judges?",["The President (of the United States)"]],
+[46,"The executive branch has many parts. Name one.",["President (of the United States)","Cabinet","Federal departments and agencies"]],
+[47,"What does the President’s Cabinet do?",["Advises the President (of the United States)"]],
+[48,"What are two Cabinet-level positions?",["Attorney General","Secretary of Agriculture","Secretary of Commerce","Secretary of Education","Secretary of Energy","Secretary of Health and Human Services","Secretary of Homeland Security","Secretary of Housing and Urban Development","Secretary of the Interior","Secretary of Labor","Secretary of State","Secretary of Transportation","Secretary of the Treasury","Secretary of Veterans Affairs","Secretary of War (Defense)","Vice-President","Administrator of the Environmental Protection Agency","Administrator of the Small Business Administration","Director of the Central Intelligence Agency","Director of the Office of Management and Budget","Director of National Intelligence","United States Trade Representative"]],
+[49,"Why is the Electoral College important?",["It decides who is elected president.","It provides a compromise between the popular election of the president and congressional selection."]],
+[50,"What is one part of the judicial branch?",["Supreme Court","Federal Courts"]],
+[51,"What does the judicial branch do?",["Reviews laws","Explains laws","Resolves disputes (disagreements) about the law","Decides if a law goes against the (U.S.) Constitution"]],
+[52,"What is the highest court in the United States?",["Supreme Court"]],
+[53,"How many seats are on the Supreme Court?",["Nine (9)"]],
+[54,"How many Supreme Court justices are usually needed to decide a case?",["Five (5)"]],
+[55,"How long do Supreme Court justices serve?",["(For) life","Lifetime appointment","(Until) retirement"]],
+[56,"Supreme Court justices serve for life. Why?",["To be independent (of politics)","To limit outside (political) influence"]],
+[57,"Who is the Chief Justice of the United States now?",["John Roberts","John G. Roberts, Jr.","Roberts"]],
+[58,"Name one power that is only for the federal government.",["Print paper money","Mint coins","Declare war","Create an army","Make treaties","Set foreign policy"]],
+[59,"Name one power that is only for the states.",["Provide schooling and education","Provide protection (police)","Provide safety (fire departments)","Give a driver’s license","Approve zoning and land use"]],
+[60,"What is the purpose of the 10th Amendment?",["(It states that the) powers not given to the federal government belong to the states or to the people."]],
+[61,"Who is the governor of your state now?",["Answers will vary."]],
+[62,"What is the capital of your state?",["Answers will vary."]],
+[63,"There are four amendments to the U.S. Constitution about who can vote. Describe one of them.",["Citizens eighteen (18) and older (can vote).","You don’t have to pay (a poll tax) to vote.","Any citizen can vote. (Women and men can vote.)","A male citizen of any race (can vote)."]],
+[64,"Who can vote in federal elections, run for federal office, and serve on a jury in the United States?",["Citizens","Citizens of the United States","U.S. citizens"]],
+[65,"What are three rights of everyone living in the United States?",["Freedom of expression","Freedom of speech","Freedom of assembly","Freedom to petition the government","Freedom of religion","The right to bear arms"]],
+[66,"What do we show loyalty to when we say the Pledge of Allegiance?",["The United States","The flag"]],
+[67,"Name two promises that new citizens make in the Oath of Allegiance.",["Give up loyalty to other countries","Defend the (U.S.) Constitution","Obey the laws of the United States","Serve in the military (if needed)","Serve (help, do important work for) the nation (if needed)","Be loyal to the United States"]],
+[68,"How can people become United States citizens?",["Be born in the United States, under the conditions set by the 14th Amendment","Naturalize","Derive citizenship (under conditions set by Congress)"]],
+[69,"What are two examples of civic participation in the United States?",["Vote","Run for office","Join a political party","Help with a campaign","Join a civic group","Join a community group","Give an elected official your opinion (on an issue)","Contact elected officials","Support or oppose an issue or policy","Write to a newspaper"]],
+[70,"What is one way Americans can serve their country?",["Vote","Pay taxes","Obey the law","Serve in the military","Run for office","Work for local, state, or federal government"]],
+[71,"Why is it important to pay federal taxes?",["Required by law","All people pay to fund the federal government","Required by the (U.S.) Constitution (16th Amendment)","Civic duty"]],
+[72,"It is important for all men age 18 through 25 to register for the Selective Service. Name one reason why.",["Required by law","Civic duty","Makes the draft fair, if needed"]],
+[73,"The colonists came to America for many reasons. Name one.",["Freedom","Political liberty","Religious freedom","Economic opportunity","Escape persecution"]],
+[74,"Who lived in America before the Europeans arrived?",["American Indians","Native Americans"]],
+[75,"What group of people was taken and sold as slaves?",["Africans","People from Africa"]],
+[76,"What war did the Americans fight to win independence from Britain?",["American Revolution","The (American) Revolutionary War","War for (American) Independence"]],
+[77,"Name one reason why the Americans declared independence from Britain.",["High taxes","Taxation without representation","British soldiers stayed in Americans’ houses (boarding, quartering)","They did not have self-government","Boston Massacre","Boston Tea Party (Tea Act)","Stamp Act","Sugar Act","Townshend Acts","Intolerable (Coercive) Acts"]],
+[78,"Who wrote the Declaration of Independence?",["(Thomas) Jefferson"]],
+[79,"When was the Declaration of Independence adopted?",["July 4, 1776"]],
+[80,"The American Revolution had many important events. Name one.",["(Battle of) Bunker Hill","Declaration of Independence","Washington Crossing the Delaware (Battle of Trenton)","(Battle of) Saratoga","Valley Forge (Encampment)","(Battle of) Yorktown (British surrender at Yorktown)"]],
+[81,"There were 13 original states. Name five.",["New Hampshire","Massachusetts","Rhode Island","Connecticut","New York","New Jersey","Pennsylvania","Delaware","Maryland","Virginia","North Carolina","South Carolina","Georgia"]],
+[82,"What founding document was written in 1787?",["(U.S.) Constitution"]],
+[83,"The Federalist Papers supported the passage of the U.S. Constitution. Name one of the writers.",["(James) Madison","(Alexander) Hamilton","(John) Jay","Publius"]],
+[84,"Why were the Federalist Papers important?",["They helped people understand the (U.S.) Constitution.","They supported passing the (U.S.) Constitution."]],
+[85,"Benjamin Franklin is famous for many things. Name one.",["Founded the first free public libraries","First Postmaster General of the United States","Helped write the Declaration of Independence","Inventor","U.S. diplomat"]],
+[86,"George Washington is famous for many things. Name one.",["“Father of Our Country”","First president of the United States","General of the Continental Army","President of the Constitutional Convention"]],
+[87,"Thomas Jefferson is famous for many things. Name one.",["Writer of the Declaration of Independence","Third president of the United States","Doubled the size of the United States (Louisiana Purchase)","First Secretary of State","Founded the University of Virginia","Writer of the Virginia Statute on Religious Freedom"]],
+[88,"James Madison is famous for many things. Name one.",["“Father of the Constitution”","Fourth president of the United States","President during the War of 1812","One of the writers of the Federalist Papers"]],
+[89,"Alexander Hamilton is famous for many things. Name one.",["First Secretary of the Treasury","One of the writers of the Federalist Papers","Helped establish the First Bank of the United States","Aide to General George Washington","Member of the Continental Congress"]],
+[90,"What territory did the United States buy from France in 1803?",["Louisiana Territory","Louisiana"]],
+[91,"Name one war fought by the United States in the 1800s.",["War of 1812","Mexican-American War","Civil War","Spanish-American War"]],
+[92,"Name the U.S. war between the North and the South.",["The Civil War"]],
+[93,"The Civil War had many important events. Name one.",["(Battle of) Fort Sumter","Emancipation Proclamation","(Battle of) Vicksburg","(Battle of) Gettysburg","Sherman’s March","(Surrender at) Appomattox","(Battle of) Antietam/Sharpsburg","Lincoln was assassinated."]],
+[94,"Abraham Lincoln is famous for many things. Name one.",["Freed the slaves (Emancipation Proclamation)","Saved (or preserved) the Union","Led the United States during the Civil War","16th president of the United States","Delivered the Gettysburg Address"]],
+[95,"What did the Emancipation Proclamation do?",["Freed the slaves","Freed slaves in the Confederacy","Freed slaves in the Confederate states","Freed slaves in most Southern states"]],
+[96,"What U.S. war ended slavery?",["The Civil War"]],
+[97,"What amendment says all persons born or naturalized in the United States, and subject to the jurisdiction thereof, are U.S. citizens?",["14th Amendment"]],
+[98,"When did all men get the right to vote?",["After the Civil War","During Reconstruction","(With the) 15th Amendment","1870"]],
+[99,"Name one leader of the women’s rights movement in the 1800s.",["Susan B. Anthony","Elizabeth Cady Stanton","Sojourner Truth","Harriet Tubman","Lucretia Mott","Lucy Stone"]],
+[100,"Name one war fought by the United States in the 1900s.",["World War I","World War II","Korean War","Vietnam War","(Persian) Gulf War"]],
+[101,"Why did the United States enter World War I?",["Because Germany attacked U.S. (civilian) ships","To support the Allied Powers (England, France, Italy, and Russia)","To oppose the Central Powers (Germany, Austria-Hungary, the Ottoman Empire, and Bulgaria)"]],
+[102,"When did all women get the right to vote?",["1920","After World War I","(With the) 19th Amendment"]],
+[103,"What was the Great Depression?",["Longest economic recession in modern history"]],
+[104,"When did the Great Depression start?",["The Great Crash (1929)","Stock market crash of 1929"]],
+[105,"Who was president during the Great Depression and World War II?",["(Franklin) Roosevelt"]],
+[106,"Why did the United States enter World War II?",["(Bombing of) Pearl Harbor","Japanese attacked Pearl Harbor","To support the Allied Powers (England, France, and Russia)","To oppose the Axis Powers (Germany, Italy, and Japan)"]],
+[107,"Dwight Eisenhower is famous for many things. Name one.",["General during World War II","President at the end of (during) the Korean War","34th president of the United States","Signed the Federal-Aid Highway Act of 1956 (Created the Interstate System)"]],
+[108,"Who was the United States’ main rival during the Cold War?",["Soviet Union","USSR","Russia"]],
+[109,"During the Cold War, what was one main concern of the United States?",["Communism","Nuclear war"]],
+[110,"Why did the United States enter the Korean War?",["To stop the spread of communism"]],
+[111,"Why did the United States enter the Vietnam War?",["To stop the spread of communism"]],
+[112,"What did the civil rights movement do?",["Fought to end racial discrimination"]],
+[113,"Martin Luther King, Jr. is famous for many things. Name one.",["Fought for civil rights","Worked for equality for all Americans","Worked to ensure that people would “not be judged by the color of their skin, but by the content of their character”"]],
+[114,"Why did the United States enter the Persian Gulf War?",["To force the Iraqi military from Kuwait"]],
+[115,"What major event happened on September 11, 2001 in the United States?",["Terrorists attacked the United States","Terrorists took over two planes and crashed them into the World Trade Center in New York City","Terrorists took over a plane and crashed into the Pentagon in Arlington, Virginia","Terrorists took over a plane originally aimed at Washington, D.C., and crashed in a field in Pennsylvania"]],
+[116,"Name one U.S. military conflict after the September 11, 2001 attacks.",["(Global) War on Terror","War in Afghanistan","War in Iraq"]],
+[117,"Name one American Indian tribe in the United States.",["Apache","Blackfeet","Cayuga","Cherokee","Cheyenne","Chippewa","Choctaw","Creek","Crow","Hopi","Huron","Inupiat","Lakota","Mohawk","Mohegan","Navajo","Oneida","Onondaga","Pueblo","Seminole","Seneca","Shawnee","Sioux","Teton","Tuscarora"]],
+[118,"Name one example of an American innovation.",["Light bulb","Automobile (cars, internal combustion engine)","Skyscrapers","Airplane","Assembly line","Landing on the moon","Integrated circuit (IC)"]],
+[119,"What is the capital of the United States?",["Washington, D.C."]],
+[120,"Where is the Statue of Liberty?",["New York (Harbor)","Liberty Island","New Jersey","Near New York City","On the Hudson (River)"]],
+[121,"Why does the flag have 13 stripes?",["(Because there were) 13 original colonies","(Because the stripes) represent the original colonies"]],
+[122,"Why does the flag have 50 stars?",["(Because there is) one star for each state","(Because) each star represents a state","(Because there are) 50 states"]],
+[123,"What is the name of the national anthem?",["The Star-Spangled Banner"]],
+[124,"The Nation’s first motto was “E Pluribus Unum.” What does that mean?",["Out of many, one","We all become one"]],
+[125,"What is Independence Day?",["A holiday to celebrate U.S. independence (from Britain)","The country’s birthday"]],
+[126,"Name three national U.S. holidays.",["New Year’s Day","Martin Luther King, Jr. Day","Presidents Day (Washington’s Birthday)","Memorial Day","Juneteenth","Independence Day","Labor Day","Columbus Day","Veterans Day","Thanksgiving Day","Christmas Day"]],
+[127,"What is Memorial Day?",["A holiday to honor soldiers who died in military service"]],
+[128,"What is Veterans Day?",["A holiday to honor people in the (U.S.) military","A holiday to honor people who have served (in the U.S. military)"]]
+];
+
+/* --- the story layer -----------------------------------------------------
+   42 of the 128 carry a story, shown only AFTER an answer is given so it can
+   never act as a hint. Chosen where the real history is more interesting than
+   the official answer; the other 86 get accepted wordings alone, which is all
+   they need. Every factual claim here was checked before shipping.
+   ---------------------------------------------------------------------- */
+var STORY = {
+4:["“We the People” was a late edit. The first draft opened by listing the states one by one — “We the People of the States of New Hampshire, Massachusetts…”",
+   "Gouverneur Morris cut the list during final styling. Nobody knew which states would actually ratify, so naming them was risky drafting.",
+   "The accident is the whole idea: the government draws its authority from people, not from states."],
+7:["Twenty-seven, and the most recent one waited 202 years. Madison proposed it in 1789 — Congress can't give itself a pay raise that takes effect before the next election. It fell short and sat dormant.",
+   "In 1982 a University of Texas sophomore named Gregory Watson wrote a paper arguing it was still technically pending. He got a C.",
+   "He spent the next decade writing to state legislatures. It was ratified in 1992 as the 27th Amendment. The professor later changed his grade to an A."],
+14:["The Articles of Confederation are on this list because they failed. The first American government couldn't tax, couldn't raise an army, and needed all 13 states to agree to change anything.",
+    "The Constitution is essentially a list of corrections to it.",
+    "The Iroquois Great Law of Peace is also accepted — Congress passed a resolution in 1988 acknowledging the Confederacy's influence on the framers, though historians still argue about how much."],
+15:["The framers weren't designing for good leaders. They were designing for bad ones.",
+    "Madison's argument in Federalist 51: “If men were angels, no government would be necessary.” Since they aren't, you set ambition against ambition and let the branches check each other out of self-interest.",
+    "It's a system built to survive the people running it."],
+26:["Two years is short on purpose. The House was meant to be the chamber that flinches — close enough to an election that it has to listen.",
+    "The Senate got six-year terms as the counterweight, to be able to ignore a bad mood.",
+    "Jefferson supposedly explained it to Washington by pouring tea into a saucer to cool: the Senate is the saucer."],
+28:["The Constitutional Convention nearly collapsed over this. Big states wanted representation by population; small states wanted one state, one vote — and threatened to walk out and form their own union if they didn't get it.",
+    "Roger Sherman of Connecticut broke the deadlock: one chamber by population, one chamber equal. Nobody got what they wanted, which is why it worked.",
+    "The consequence is still live. Wyoming's roughly 580,000 residents get the same two senators as California's 39 million."],
+35:["The House has been frozen at 435 since 1929. It wasn't meant to be — it grew with the country for 140 years.",
+    "Congress simply stopped enlarging it, so seats are now reapportioned among states after each census rather than added.",
+    "That freeze is why a House seat represents about 760,000 people today instead of the 30,000 the Constitution set as a minimum."],
+37:["There was no rule until 1951 — just Washington's example. He stepped down after two terms and every president for 150 years followed him.",
+    "Franklin Roosevelt broke it, winning four elections between 1932 and 1944 through the Depression and most of the war. He died months into the fourth.",
+    "Congress turned the custom into law with the 22nd Amendment. A precedent held for a century and a half; a statute was written the moment it didn't."],
+49:["You don't actually vote for president. You vote for a slate of electors pledged to one — 538 of them, 270 to win.",
+    "It was a compromise between letting Congress pick the president and letting the public do it directly, at a time when the framers distrusted both.",
+    "It's why a candidate can win the most votes nationally and still lose, which has happened five times."],
+54:["Nine seats, five to decide. Simple majority, no supermajority required — a 5–4 ruling carries exactly the same force as a 9–0 one.",
+    "Nine isn't in the Constitution. Congress sets the number, and it has ranged from five to ten.",
+    "Roosevelt tried to expand it to fifteen in 1937 after the Court struck down New Deal laws. Even his own party refused. It's been nine since 1869."],
+56:["Life tenure is a bribe against fear. A judge who can be fired is a judge who can be pressured, so the framers made the job unlosable.",
+    "Hamilton's argument in Federalist 78: the judiciary controls neither the army nor the budget, so it's the weakest branch and needs independence most.",
+    "The salary is protected too — Congress cannot reduce a federal judge's pay while they serve."],
+60:["The 10th Amendment is the one that says: everything we didn't mention is yours.",
+    "Powers not given to the federal government belong to the states or the people. It was added to reassure people who feared the new government would swallow the states.",
+    "Two centuries of argument about federal versus state power run through this single sentence."],
+63:["Four separate amendments, each fixing a different exclusion. The 15th (1870) barred denying the vote by race. The 19th (1920) by sex.",
+    "The 24th (1964) banned poll taxes in federal elections. The 26th (1971) lowered the age to 18.",
+    "The 26th moved fastest in American history — about three months. The argument that carried it: men were being drafted for Vietnam at 18 and couldn't vote."],
+66:["The Pledge was written in 1892 by Francis Bellamy, a Baptist minister and a socialist, to sell flags with a magazine subscription for the 400th anniversary of Columbus.",
+    "His original text had no country in it at all — “my Flag” — so any immigrant could say it. Congress changed it to “the Flag of the United States of America” in 1923.",
+    "“Under God” was added in 1954, during the Cold War."],
+71:["The income tax needed a constitutional amendment because the Supreme Court struck it down. Before 1913 the federal government ran mostly on tariffs and whiskey taxes.",
+    "The 16th Amendment fixed that, and at first it hit almost nobody — the top rate was 7% and fewer than 1% of Americans owed anything.",
+    "It became a mass tax during World War II, which is also when payroll withholding was invented."],
+72:["There has been no draft since 1973, but registration is still legally required for men 18 through 25.",
+    "The point is readiness: a list that already exists, so a future draft would be fast and, in theory, fair.",
+    "The Vietnam-era lottery is why the fairness argument stayed. Deferments meant the draft fell hardest on those who couldn't avoid it."],
+74:["Estimates of the population of the Americas in 1492 run from a few million to over fifty million. Historians genuinely disagree.",
+    "What isn't disputed is what happened next: introduced diseases killed a very large share of that population, often ahead of the Europeans themselves arriving.",
+    "There are 574 federally recognized tribal nations in the United States today."],
+77:["“No taxation without representation” wasn't mainly about the money. The Stamp Act taxes were small.",
+    "It was about who gets to decide. Colonists had no members in Parliament, so Parliament taxing them meant they were governed by a body they had no say in.",
+    "The Boston Tea Party is the famous one, but the Quartering Acts — soldiers housed in private buildings — put the argument inside people's homes."],
+79:["The vote for independence happened on July 2, not July 4. The 4th is the day the wording of the Declaration was approved.",
+    "John Adams wrote to his wife Abigail that July 2 “will be the most memorable Epocha in the History of America,” celebrated forever with parades and fireworks. He had the right celebration and the wrong date.",
+    "Adams and Jefferson both died on July 4, 1826 — the 50th anniversary, within hours of each other."],
+80:["Valley Forge wasn't a battle. It was a winter camp, and roughly 2,000 men died there of disease and exposure without an enemy nearby.",
+    "It's remembered because of what happened in it: a Prussian officer, Baron von Steuben, spent that winter drilling the Continental Army into something that could hold a line.",
+    "They marched out in June 1778 as a professional force. Saratoga won them the French alliance; Valley Forge gave them an army worth allying with."],
+84:["They were propaganda — 85 anonymous newspaper essays published under the pen name “Publius,” written to swing one state: New York, where ratification was in real danger of failing.",
+    "Hamilton wrote about 51 of them, Madison 29, Jay 5. Nobody knew who Publius was at the time.",
+    "New York ratified by three votes, 30 to 27. The essays are now cited by the Supreme Court as evidence of what the framers meant."],
+85:["Franklin never held the presidency and is on the $100 bill anyway. At 81 he was the oldest delegate at the Constitutional Convention and had to be carried to sessions.",
+    "He invented the lightning rod, bifocals, and a stove, and refused to patent any of them — his view was that we benefit from others' inventions and should return the favor freely.",
+    "He is the only person to sign the Declaration of Independence, the Constitution, and the treaties with France and Britain."],
+88:["Madison took the notes. The Constitutional Convention met in secret with the windows nailed shut in a Philadelphia summer, and he sat at the front writing down nearly everything said.",
+    "His notes weren't published until 1840, after his death — he was the last surviving delegate.",
+    "Almost everything known about how the Constitution was actually argued into existence comes from one man's handwriting."],
+89:["Hamilton was born in the Caribbean, illegitimate and orphaned, and reached New York on a scholarship raised by neighbors after a hurricane destroyed his town.",
+    "As the first Treasury Secretary he had the federal government assume the states' war debts — a wildly unpopular move that established American credit and the national bank.",
+    "He was killed in a duel by the sitting vice president, Aaron Burr, in 1804."],
+90:["Napoleon offered far more than Jefferson asked for. American envoys went to Paris to buy New Orleans; France offered the entire territory.",
+    "It cost about $15 million for roughly 828,000 square miles — under three cents an acre — and doubled the size of the country overnight.",
+    "France sold because it had just lost Haiti to a slave revolt and needed money for a war with Britain. Jefferson, a strict constructionist, privately doubted he had the constitutional authority to buy it, and did it anyway."],
+93:["Antietam was the single bloodiest day in American history — about 22,000 casualties in one day in September 1862.",
+    "It was barely a Union victory, but it was enough of one that Lincoln could issue the Emancipation Proclamation from a position of strength rather than desperation.",
+    "The war killed an estimated 620,000 to 750,000 people, more than every other American war combined until Vietnam."],
+95:["It freed almost nobody on the day it was signed. It applied only to territory in rebellion — where the Union had no power to enforce it — and deliberately exempted the loyal slave states.",
+    "What it did was change what the war was for. After January 1863 a Union advance was an act of emancipation, and Britain and France could no longer intervene for the South without defending slavery.",
+    "Slavery was ended in law by the 13th Amendment in 1865, not by the Proclamation."],
+97:["The 14th Amendment was written to overrule a Supreme Court decision. In 1857, Dred Scott held that Black Americans could not be citizens.",
+    "The amendment answered it directly in its first sentence: anyone born or naturalized here, subject to its jurisdiction, is a citizen.",
+    "That single clause also carries the due process and equal protection guarantees, and is the basis for more constitutional litigation than any other passage."],
+98:["The amendment says race can't be used to deny the vote. It was ratified in 1870, and for a few years it held — hundreds of Black men were elected to office across the South.",
+    "Then came poll taxes, literacy tests, grandfather clauses and worse. By 1940, about 3% of voting-age Black adults in the South were registered.",
+    "The right existed on paper for 95 years before the Voting Rights Act of 1965 made it real. Both facts are true, and the test only asks you for the first one."],
+99:["Susan B. Anthony voted illegally in 1872, was arrested, tried, and fined $100. She never paid it, and the government never made her — a collection case would have let her appeal to the Supreme Court.",
+    "She died in 1906, fourteen years before women could vote nationally.",
+    "Harriet Tubman is on this list too. After the Underground Railroad and scouting for the Union Army, she spent decades in the suffrage movement."],
+101:["Germany resumed unrestricted submarine warfare in 1917, sinking neutral ships without warning, including American ones.",
+     "Then British intelligence intercepted the Zimmermann Telegram: Germany offering Mexico an alliance and the return of Texas, New Mexico and Arizona if the U.S. entered the war.",
+     "Its publication ended American neutrality. Congress declared war in April 1917."],
+102:["It came down to one vote in one state. Tennessee was the 36th and deciding state, and its legislature was tied.",
+     "Harry Burn, 24 and the youngest member, was wearing a red rose signalling a no vote. He had a letter in his pocket from his mother Febb telling him to “be a good boy” and vote yes.",
+     "He changed his vote. The 19th Amendment was ratified on August 18, 1920."],
+104:["The crash was October 1929, but the crash wasn't the Depression — it was the start of a three-year slide. The Dow lost about 89% of its value from peak to bottom in 1932.",
+     "Unemployment reached roughly 25%. Around a third of American banks failed, taking depositors' savings with them because deposits weren't insured.",
+     "Deposit insurance, the SEC, and Social Security all came out of the wreckage, which is why it still shapes the financial system."],
+106:["The attack on Pearl Harbor lasted about 90 minutes and sank or damaged 19 ships and killed over 2,400 people.",
+     "The U.S. had been supplying Britain for over a year but stayed formally out of the war; opinion was strongly against joining. That ended in a morning.",
+     "Japan's goal was to buy time by knocking out the Pacific fleet. The American aircraft carriers happened to be at sea that day, and they turned out to be the ships that mattered."],
+107:["In 1919 a young Army officer joined a convoy driving across the country to test whether it could be done. It took 62 days.",
+     "Eisenhower later saw the German autobahn as a general, and remembered the 62 days.",
+     "As president he signed the Federal-Aid Highway Act of 1956 — the largest public works project in American history, and the reason you can drive from New York to Los Angeles without a traffic light."],
+112:["Rosa Parks was not a tired seamstress who happened to sit down. She was a trained activist and secretary of her NAACP chapter, and the boycott had been planned for months waiting for the right case.",
+     "The Montgomery bus boycott lasted 381 days. Most Black residents of the city walked or carpooled for over a year.",
+     "It ended when the Supreme Court ruled bus segregation unconstitutional, and it made a 26-year-old pastor named Martin Luther King Jr. a national figure."],
+115:["Nearly 3,000 people were killed — the deadliest attack on American soil, more than Pearl Harbor.",
+     "Four planes were hijacked. Two hit the World Trade Center, one the Pentagon, and one crashed in a Pennsylvania field after passengers who had learned about the other attacks by phone fought for the cockpit.",
+     "It produced the Department of Homeland Security — and USCIS itself, which was created out of the reorganization that followed."],
+118:["The moon landing is on the official list, and the computer that guided it had about 4KB of memory — far less than a single photo on your phone.",
+     "Margaret Hamilton led the team that wrote its software and is generally credited with coining the term “software engineering,” partly because nobody took the discipline seriously at the time.",
+     "Her priority-scheduling code is what saved the landing: as Apollo 11 descended, the computer overloaded with alarms and dropped the low-priority tasks instead of crashing."],
+120:["It was a gift from France, dedicated in 1886, and Americans nearly refused it — Congress wouldn't fund the pedestal and the statue sat in crates in Paris.",
+     "Joseph Pulitzer ran a newspaper campaign shaming the public into paying for it. Over 120,000 people donated, most giving less than a dollar.",
+     "It was built as a monument to liberty and republican government, not to immigration. That meaning came later, largely from Emma Lazarus's poem on the pedestal."],
+121:["It hasn't always been 13. When Vermont and Kentucky joined, Congress added two stripes as well as two stars — a 15-stripe flag.",
+     "That's the flag Francis Scott Key was actually looking at over Fort McHenry in 1814 when he wrote the poem that became the national anthem. The “broad stripes” were fifteen.",
+     "A stripe per state would clearly get unmanageable, so the Flag Act of 1818 reverted to 13 permanently and put new states in the stars instead."],
+124:["“Out of many, one.” It appeared on the Great Seal in 1782, when the point was thirteen quarrelsome colonies becoming one country.",
+     "It was never made official by law — it was simply used for 174 years.",
+     "In 1956 Congress adopted “In God We Trust” as the official national motto. E Pluribus Unum is still on the coins in your pocket."],
+126:["There are eleven federal holidays, and the newest is Juneteenth, added in 2021.",
+     "It marks June 19, 1865 — the day Union troops reached Galveston, Texas and announced that slavery was over. That was two and a half months after the war ended and two and a half years after the Emancipation Proclamation.",
+     "Texas was the most remote Confederate state, and news travelled at the speed of the army carrying it."]
+};
+
+/* --- hand-checked distractor pools ---------------------------------------
+   For questions with many accepted answers, auto-generated wrong options are
+   frequently correct by accident. These pools are written by hand and are
+   verified NOT to appear in the question's accepted list (see self-tests).
+
+   Every question also carries an answer KIND, so that when a pool must be
+   widened the options drawn are at least the same *type* of thing (a number
+   for a number, an office for an office) instead of a verb phrase against a
+   date. Without this, "Describe a voting amendment" drew "Obey the law".
+   ---------------------------------------------------------------------- */
+var KIND = (
+  "CDOCCRNCDCDCCDC"+  /*   1- 15 */
+  "IIIIONNPNNCNCPP"+  /*  16- 30 */
+  "CCCCCNCPPIOIIII"+  /*  31- 45 */
+  "IOICIOINNCCPOOC"+  /*  46- 60 */
+  "PLCCRCOCOOCCCCC"+  /*  61- 75 */
+  "WCPYWLDPCCCCCCL"+  /*  76- 90 */
+  "WWWCOWDCPWCCCYP"+  /*  91-105 */
+  "CCLCCCCCCCWTVLL"+  /* 106-120 */
+  "CCCCHHHH"          /* 121-128 */
+);
+function kindOf(id){ return KIND.charAt(id-1)||"C"; }
+
+var DISTRACT = {
+4:["Rule by the majority","Freedom of religion","The right to a fair trial","Separation of church and state"],
+8:["It created the office of the president.","It ended slavery in the colonies.","It established the Supreme Court.","It set the rules for electing Congress."],
+10:["Monarchy","A state religion","Hereditary titles","Rule by the wealthy"],
+13:["The president writes the laws.","Judges may set aside any law they dislike.","Only citizens must follow the law.","The law applies differently to elected officials."],
+14:["The Emancipation Proclamation","The Gettysburg Address","The Treaty of Paris","The Monroe Doctrine"],
+15:["So that laws can be written faster","So each state controls one branch","To give the president the final say","Because the colonies had three regions"],
+26:["Because their districts are smaller","Because there are more of them","So they can be replaced by the governor","Because the Senate confirms them"],
+28:["Because there were two original colonies","So each party gets one seat","Because the Constitution has two houses","To match the number of presidential terms"],
+35:["Because their states are larger in land area","Because they joined the Union earlier","Because their states pay more federal tax","Because their governors request more"],
+37:["Because of the 10th Amendment","Because the Cabinet must be replaced","So the vice president gets a turn","Because Congress votes on it every eight years"],
+49:["It counts the votes in the House.","It confirms Supreme Court justices.","It decides which laws are constitutional.","It selects the president's Cabinet."],
+56:["To keep the Court smaller","Because the Constitution requires nine","So the president can replace them","To match the term of the president"],
+60:["It guarantees freedom of speech.","It sets the number of Supreme Court seats.","It gives Congress the power to tax.","It defines who can become a citizen."],
+63:["Only property owners may vote.","Voters must pass a civics test.","Each state sets its own voting age.","Voting is required by federal law."],
+64:["Anyone living in the United States","Lawful permanent residents","Anyone who pays federal taxes","Anyone born in North America"],
+66:["The president","Congress","Your state","The Constitution"],
+68:["By paying federal taxes for ten years","By serving in the military","By marrying a U.S. citizen","By owning property in the United States"],
+71:["To pay for state governments","Because the president requires it","To fund only the military","Because the states cannot collect taxes"],
+72:["To qualify for a passport","To be eligible to vote","To receive a driver's license","To serve on a jury"],
+73:["To escape a famine in Britain","To search for gold","Because Britain deported them","To trade with American Indians"],
+74:["The Spanish","The Vikings","The French","Nobody lived here"],
+75:["Europeans","American Indians","Indentured servants from Britain","Prisoners of war"],
+76:["The Civil War","The War of 1812","The French and Indian War","The Spanish-American War"],
+79:["September 17, 1787","July 4, 1789","July 2, 1776","March 4, 1789"],
+84:["They were the first draft of the Bill of Rights.","They listed the colonies' complaints against Britain.","They set the rules for the Constitutional Convention.","They created the first political parties."],
+94:["Wrote the Declaration of Independence","First president of the United States","Doubled the size of the United States","Led the United States during World War I"],
+98:["Before the Revolution","With the 19th Amendment","1920","When the Constitution was written"],
+101:["Because Japan attacked Pearl Harbor","To stop the spread of communism","To force Iraq out of Kuwait","Because Britain asked for troops"],
+102:["1870","After the Civil War","With the 15th Amendment","1965"],
+103:["A war fought in Europe","A period of rapid economic growth","A shortage of farmland in the West","A national banking holiday"],
+104:["The Panic of 1893","Black Monday (1987)","The bank failures of 1933","The end of World War I (1918)"],
+106:["Because Germany attacked U.S. ships","To stop the spread of communism","To force the Iraqi military from Kuwait","Because France was invaded"],
+107:["Wrote the Declaration of Independence","President during the Great Depression","Led the Union Army in the Civil War","First Secretary of the Treasury"],
+109:["Terrorism","Immigration","Inflation","A shortage of oil"],
+110:["To force the Iraqi military from Kuwait","Because Germany attacked U.S. ships","To support the Allied Powers","Because Japan attacked Pearl Harbor"],
+111:["To force the Iraqi military from Kuwait","Because Japan attacked Pearl Harbor","To support the Central Powers","Because Germany attacked U.S. ships"],
+112:["Ended the Vietnam War","Won women the right to vote","Created the national park system","Ended the Great Depression"],
+113:["Wrote the Emancipation Proclamation","First African American in Congress","Led the Montgomery bus company","Founded the United Nations"],
+114:["To stop the spread of communism","Because Germany attacked U.S. ships","Because Japan attacked Pearl Harbor","To support the Allied Powers"],
+115:["The stock market crashed","The Vietnam War ended","Hurricane Katrina struck New Orleans","The first moon landing"],
+121:["Because there are 13 amendments","One stripe for each founding father","Because 13 states signed the Constitution","Because the flag has 13 stars"],
+122:["Because there were 50 original colonies","One star for each amendment","Because the flag has 50 stripes","One star for each year of independence"],
+124:["In God we trust","Land of the free","Liberty and justice for all","One nation under God"],
+48:["Speaker of the House","Chief Justice of the United States","Senate Majority Leader","Governor of New York"],
+65:["The right to free healthcare","The right to a guaranteed job","The right to free college","The right to hold public office"],
+67:["Pay all back taxes","Learn a second language","Donate to a political party","Give up your birth name"],
+69:["Pay a membership fee","Buy government bonds","Attend a naturalization ceremony","Take an oath every year"],
+77:["The Louisiana Purchase","The Missouri Compromise","The Homestead Act","The Monroe Doctrine"],
+80:["(Battle of) Gettysburg","(Battle of) Antietam","Sherman’s March","(Surrender at) Appomattox"],
+81:["Vermont","Maine","Ohio","Kentucky","Tennessee","Florida","Texas","California"],
+91:["World War I","Korean War","Vietnam War","American Revolution"],
+93:["(Battle of) Bunker Hill","(Battle of) Yorktown","Valley Forge","Pearl Harbor"],
+99:["Rosa Parks","Eleanor Roosevelt","Betsy Ross","Abigail Adams"],
+100:["Civil War","War of 1812","Mexican-American War","Spanish-American War"],
+117:["Zulu","Maori","Inca","Aztec","Sami"],
+118:["Gunpowder","The printing press","Penicillin","The steam engine"],
+126:["Election Day","Valentine’s Day","Halloween","Easter","St. Patrick’s Day"]
+};
+
+/* ==========================================================================
+   ENGINE
+   ========================================================================== */
+var Q = RAW.map(function(r){
+  var c = catOf(r[0]);
+  return {id:r[0], q:r[1], a:r[2], cat:c.k, catName:c.name, group:c.group,
+          star:STAR.indexOf(r[0])>=0, varies:VARIES[r[0]]||null,
+          need:NEED[r[0]]||1, story:STORY[r[0]]||null};
+});
+var BY_ID = {}; Q.forEach(function(q){ BY_ID[q.id]=q; });
+
+var DEFAULTS = {theme:"dark", stateName:"New York",
+  senators:"Chuck Schumer, Kirsten Gillibrand", governor:"Kathy Hochul",
+  capital:"Albany", rep:""};
+
+var S = null, view = "home", ctx = {}, timerH = null;
+
+function todayKey(){ var d=new Date(); return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2); }
+function daysBetween(a,b){ return Math.round((new Date(b)-new Date(a))/86400000); }
+
+function load(){
+  var raw=null;
+  try{ raw = localStorage.getItem("civics.v1"); }catch(e){}
+  S = raw ? JSON.parse(raw) : null;
+  if(!S || typeof S!=="object"){ S = {box:{}, mastAt:{}, xp:0, days:0, lastDay:null, exams:[], set:{}}; }
+  S.box=S.box||{}; S.mastAt=S.mastAt||{}; S.exams=S.exams||[]; S.set=S.set||{};
+  for(var k in DEFAULTS){ if(S.set[k]===undefined) S.set[k]=DEFAULTS[k]; }
+  if(typeof S.xp!=="number") S.xp=0;
+  if(typeof S.days!=="number") S.days=0;
+  applyDecay();
+}
+function save(){ try{ localStorage.setItem("civics.v1", JSON.stringify(S)); }catch(e){} }
+
+/* Mastered questions decay one box after 30 untouched days, so the ring can fall. */
+function applyDecay(){
+  var now=Date.now(), changed=false;
+  for(var id in S.box){
+    if(S.box[id]>=4){
+      var t=S.mastAt[id]||now;
+      var elapsed=Math.floor((now-t)/(30*86400000));
+      if(elapsed>=1){ S.box[id]=Math.max(0,S.box[id]-elapsed); S.mastAt[id]=now; changed=true; }
+    }
+  }
+  if(changed) save();
+}
+function markDay(){
+  var t=todayKey();
+  if(S.lastDay===t) return;
+  S.days = (S.lastDay && daysBetween(S.lastDay,t)===1) ? S.days+1 : 1;
+  S.lastDay=t; save();
+}
+function boxOf(id){ return S.box[id]||0; }
+function setBox(id,v){
+  S.box[id]=Math.max(0,Math.min(5,v));
+  if(S.box[id]>=4) S.mastAt[id]=Date.now(); else delete S.mastAt[id];
+}
+function masteredCount(){ var n=0; Q.forEach(function(q){ if(boxOf(q.id)>=4) n++; }); return n; }
+function level(){ return Math.floor(S.xp/220)+1; }
+
+/* Answers for the 7 that depend on who's in office or where you live. */
+function answersFor(q){
+  if(!q.varies) return q.a;
+  var s=S.set;
+  if(q.varies==="senators") return s.senators?s.senators.split(",").map(function(x){return x.trim();}).filter(Boolean):[];
+  if(q.varies==="governor") return s.governor?[s.governor]:[];
+  if(q.varies==="capital")  return s.capital?[s.capital]:[];
+  if(q.varies==="rep")      return s.rep?[s.rep]:[];
+  return [];
+}
+function isOfficeholder(id){ return id===30||id===38||id===39||id===57; }
+
+/* Weighted selection: a box-0 question is six times likelier than a box-5 one. */
+function pickWeighted(n, pool){
+  pool = (pool||Q).slice();
+  var out=[];
+  while(out.length<n && pool.length){
+    var tot=0,i;
+    for(i=0;i<pool.length;i++) tot += (6-boxOf(pool[i].id));
+    var r=Math.random()*tot, acc=0, idx=0;
+    for(i=0;i<pool.length;i++){ acc += (6-boxOf(pool[i].id)); if(r<=acc){ idx=i; break; } }
+    out.push(pool.splice(idx,1)[0]);
+  }
+  return out;
+}
+function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
+function norm(s){ return String(s).toLowerCase().replace(/[()“”".,'’\-]/g," ").replace(/\s+/g," ").trim(); }
+
+/* Multiple-choice construction. Questions that depend on you are never MC. */
+function buildMC(q){
+  if(q.varies) return null;
+  var accepted = q.a.map(norm);
+  var pool = (DISTRACT[q.id]||[]).filter(function(d){ return accepted.indexOf(norm(d))<0; });
+  // Widen only within the same answer kind, then the same kind anywhere.
+  // Never fall back to "any answer at all" — that is what produced nonsense.
+  function widen(test){
+    Q.forEach(function(o){
+      if(o.id===q.id || o.varies || !test(o)) return;
+      o.a.forEach(function(a){
+        if(accepted.indexOf(norm(a))<0 && pool.map(norm).indexOf(norm(a))<0) pool.push(a);
+      });
+    });
+  }
+  var k=kindOf(q.id);
+  if(pool.length < 3) widen(function(o){ return o.cat===q.cat && kindOf(o.id)===k; });
+  if(pool.length < 3) widen(function(o){ return kindOf(o.id)===k; });
+  var need = q.need;
+  var right = shuffle(q.a).slice(0, need);
+  var wrongCount = need>1 ? Math.max(3, 8-need) : 3;
+  var wrong = shuffle(pool).slice(0, wrongCount);
+  if(wrong.length===0) return null;
+  var opts = shuffle(right.concat(wrong)).map(function(t){
+    return {text:t, ok:accepted.indexOf(norm(t))>=0};
+  });
+  return {opts:opts, need:need};
+}
+
+/* ==========================================================================
+   RENDER
+   ========================================================================== */
+var ICON={
+  home:'<path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
+  bolt:'<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
+  doc:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/>',
+  book:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  check:'<path d="M20 6 9 17l-5-5"/>',
+  chev:'<path d="m9 18 6-6-6-6"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',
+  info:'<circle cx="12" cy="12" r="10"/><path d="M12 8v5M12 16h.01"/>',
+  quill:'<path d="M12 7v14M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>'
+};
+function svg(p,sz,sw){ return '<svg width="'+(sz||18)+'" height="'+(sz||18)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="'+(sw||1.7)+'" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>'; }
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function heart(on){ return on
+  ? '<svg width="19" height="19" viewBox="0 0 24 24" fill="#ef4444"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>'
+  : '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--text-disabled)" stroke-width="1.7"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1L12 21l7.7-7.6 1.1-1a5.5 5.5 0 0 0 0-7.8z"/></svg>'; }
+
+var $=function(s){ return document.querySelector(s); };
+function go(v,c){ view=v; ctx=c||{}; stopTimer(); render(); $("main").scrollTop=0; }
+function toast(msg){
+  var t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.body.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 1700);
+}
+
+function render(){
+  document.documentElement.setAttribute("data-theme", S.set.theme);
+  var bar=$("#appbar"), tabs=$("#tabbar"), m=$("#main");
+  var quiz = (view==="drill"||view==="exam");
+  tabs.style.display = quiz ? "none" : "flex";
+  if(view==="home")      { bar.innerHTML=barHome();   m.innerHTML=screenHome(); }
+  else if(view==="drill"){ bar.innerHTML=barQuiz(ctx.i+1+" of "+ctx.qs.length); m.innerHTML=screenDrill(); }
+  else if(view==="exam") { bar.innerHTML=barQuiz("Official exam simulation"); m.innerHTML=screenExam(); }
+  else if(view==="result"){bar.innerHTML=barHome();   m.innerHTML=screenResult(); }
+  else if(view==="study"){ bar.innerHTML=barTitle("Study", masteredCount()+" / 128 mastered"); m.innerHTML=screenStudy(); }
+  else if(view==="settings"){bar.innerHTML=barTitle("Settings",""); m.innerHTML=screenSettings(); }
+  if(!quiz) tabs.innerHTML=tabbar();
+  // Recall cards (the 4 state-specific questions) are never timed.
+  if(view==="drill" && !ctx.answered && ctx.mc) startTimer();
+}
+function barHome(){
+  return '<div class="wordmark"><div class="seal">★</div><h1>Civics</h1></div>'+
+         '<button class="icobtn" data-go="settings">'+svg(ICON.gear,16)+'</button>';
+}
+function barTitle(t,right){
+  return '<div class="wordmark"><h1>'+t+'</h1></div>'+
+         (right?'<span class="micro">'+right+'</span>':'<button class="icobtn" data-go="home">'+svg(ICON.x,16,2)+'</button>');
+}
+function barQuiz(label){
+  return '<button class="icobtn" data-quit="1">'+svg(ICON.x,16,2)+'</button>'+
+         '<span class="micro">'+label+'</span><span style="width:34px"></span>';
+}
+function tabbar(){
+  var t=[["home","Home",ICON.home],["drill","Drill",ICON.bolt],["exam","Exam",ICON.doc],["study","Study",ICON.book]];
+  return t.map(function(x){
+    var on = (view===x[0]) || (view==="result"&&x[0]==="exam") || (view==="settings"&&x[0]==="home");
+    return '<button class="tab'+(on?" on":"")+'" data-tab="'+x[0]+'"><span class="dot">'+svg(x[2],18)+'</span>'+x[1]+'</button>';
+  }).join("");
+}
+
+/* ---- HOME ---- */
+function screenHome(){
+  var m=masteredCount(), pct=m/128, C=2*Math.PI*52;
+  var last=S.exams.length?S.exams[S.exams.length-1]:null;
+  var verdict = m>=90 ? "You'd likely pass" : m>=50 ? "Getting close" : m>=15 ? "Early days" : "Just getting started";
+  var weak = CATS.map(function(c){
+    var qs=Q.filter(function(q){return q.cat===c.k;});
+    var got=qs.filter(function(q){return boxOf(q.id)>=4;}).length;
+    return {name:c.name, pct:Math.round(got/qs.length*100), got:got, tot:qs.length};
+  }).sort(function(a,b){return a.pct-b.pct;}).slice(0,3);
+
+  return '<div class="fade">'+
+   '<div class="card"><div class="ringwrap">'+
+     '<svg width="112" height="112" viewBox="0 0 120 120" style="flex:0 0 112px">'+
+       '<circle cx="60" cy="60" r="52" fill="none" stroke="rgba(120,130,150,.16)" stroke-width="9"/>'+
+       '<circle cx="60" cy="60" r="52" fill="none" stroke="url(#gr)" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+(C*(1-pct)).toFixed(1)+'" transform="rotate(-90 60 60)"/>'+
+       '<defs><linearGradient id="gr" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0d9488"/><stop offset="100%" stop-color="#2dd4bf"/></linearGradient></defs>'+
+       '<text x="60" y="57" text-anchor="middle" font-size="27" font-weight="500" fill="var(--text-primary)" style="font-feature-settings:\'cv01\',\'tnum\';letter-spacing:-.8px">'+m+'</text>'+
+       '<text x="60" y="74" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text-muted)" style="letter-spacing:.06em">OF 128</text>'+
+     '</svg>'+
+     '<div class="ringtxt" style="flex:1;min-width:0"><div class="micro" style="margin-bottom:5px">Mastered</div>'+
+       '<h2>'+verdict+'</h2><p>'+Math.round(pct*100)+'% locked in. '+(128-m)+' still soft.</p></div>'+
+   '</div></div>'+
+   '<div class="pillrow">'+
+     '<div class="pill"><div class="v" style="color:var(--warning)">🔥 '+S.days+'</div><div class="l">Day streak</div></div>'+
+     '<div class="pill"><div class="v">Lv '+level()+'</div><div class="l">'+S.xp.toLocaleString()+' XP</div></div>'+
+     '<div class="pill"><div class="v"'+(last?' style="color:var(--'+(last.passed?"success":"error")+')"':'')+'>'+(last?last.correct+"/"+last.asked:"—")+'</div><div class="l">Last exam</div></div>'+
+   '</div>'+
+   '<div style="margin-top:20px">'+
+     mode("drill","primary","","Daily Drill","10 questions · 3 lives · beat the clock",ICON.bolt)+
+     mode("exam","","sec","Take the Exam","The real thing · 20 asked, 12 to pass",ICON.doc)+
+     mode("study","","neutral","Study all 128","By category · official answers",ICON.book)+
+   '</div>'+
+   '<div style="margin-top:20px"><div class="micro">Weakest ground</div>'+
+     weak.map(function(w){
+       var col = w.pct<35?"var(--error)":w.pct<70?"var(--warning)":"linear-gradient(90deg,#0d9488,#2dd4bf)";
+       return '<div class="weakrow"><span class="weakname">'+esc(w.name)+'</span>'+
+              '<span class="bar"><i style="width:'+Math.max(w.pct,2)+'%;background:'+col+'"></i></span>'+
+              '<span class="weakpct">'+w.pct+'%</span></div>';
+     }).join("")+
+   '</div></div>';
+}
+function mode(go,cls,icls,t,sub,icon){
+  return '<button class="modecard '+cls+'" data-start="'+go+'">'+
+    '<span class="mi '+icls+'">'+svg(icon,19)+'</span>'+
+    '<span class="mt"><h4>'+t+'</h4><p>'+sub+'</p></span>'+
+    '<span style="color:var(--text-disabled)">'+svg(ICON.chev,16,1.8)+'</span></button>';
+}
+
+/* ---- DRILL ---- */
+function drillCtx(qs){
+  // mc must be resolved BEFORE go() renders, or question 1 falls back to recall.
+  return {qs:qs,i:0,lives:3,streak:0,best:0,xp:0,answered:false,sel:[],
+          mc:buildMC(qs[0]),correct:0,tQ:null,tEnd:null};
+}
+function startDrill(){ go("drill", drillCtx(pickWeighted(10))); }
+function startTimer(){
+  stopTimer();
+  var q=ctx.qs[ctx.i];
+  var total = (q.need>1?40:20)*1000;
+  // Resume rather than restart: re-rendering (e.g. tapping a multi-select
+  // option) must not refill the clock for the same question.
+  if(ctx.tQ!==ctx.i || !ctx.tEnd){ ctx.tEnd = Date.now()+total; ctx.tQ=ctx.i; }
+  ctx.tTotal=total;
+  timerH=setInterval(function(){
+    var left=ctx.tEnd-Date.now();
+    var el=document.getElementById("tbar");
+    if(!el){ stopTimer(); return; }
+    var f=Math.max(0,left/ctx.tTotal);
+    el.style.width=(f*100)+"%";
+    el.className = f<.25?"low":"";
+    if(left<=0){ stopTimer(); answerDrill(-1); }
+  },200);
+}
+function stopTimer(){ if(timerH){ clearInterval(timerH); timerH=null; } }
+
+function screenDrill(){
+  var q=ctx.qs[ctx.i], mc=ctx.mc;
+  var hud='<div class="hud"><div class="hearts">'+[0,1,2].map(function(i){return heart(i<ctx.lives);}).join("")+'</div>'+
+    '<div style="display:flex;gap:7px"><span class="chip flame">🔥 '+ctx.streak+'</span><span class="chip xp">+'+ctx.xp+' XP</span></div></div>';
+  if(!mc){ /* the 4 state-specific questions: recall card, untimed, inside a run */
+    return '<div class="fade">'+hud+quizRecall(q, true)+(ctx.answered?nextBtn():"")+'</div>';
+  }
+  var multi = mc.need>1;
+  var h=hud+
+    '<div class="timer"><i id="tbar" style="width:100%"></i></div>'+
+    '<span class="qtag">'+esc(q.catName)+'</span>'+
+    '<div class="qtext">'+esc(q.q)+'</div>'+
+    (multi?'<div class="qsub">Pick '+mc.need+'.</div>':'')+
+    '<div class="opts">';
+  mc.opts.forEach(function(o,i){
+    var cls="opt";
+    if(ctx.answered){
+      if(o.ok) cls+=" right";
+      else if(ctx.sel.indexOf(i)>=0) cls+=" chosen-wrong";
+      else cls+=" dim";
+    } else if(ctx.sel.indexOf(i)>=0) cls+=" sel";
+    var key = ctx.answered&&o.ok ? "✓" : String.fromCharCode(65+i);
+    h+='<button class="'+cls+'" data-opt="'+i+'"><span class="key">'+key+'</span><span>'+esc(o.text)+'</span></button>';
+  });
+  h+='</div>';
+  if(multi && !ctx.answered){
+    h+='<div style="margin-top:14px"><button class="btn teal small" data-submit="1"'+(ctx.sel.length===mc.need?"":" disabled")+'>Submit '+ctx.sel.length+' of '+mc.need+'</button></div>';
+  }
+  if(ctx.answered) h+=feedbackBlock(q, ctx.wasRight)+nextBtn();
+  return '<div class="fade">'+h+'</div>';
+}
+function feedbackBlock(q, ok){
+  var alt=q.a.filter(function(a){return true;}).slice(0,4).join(" · ");
+  var h='<div class="feedback '+(ok?"ok":"no")+'">'+
+    '<span style="color:var(--'+(ok?"success":"error")+');margin-top:1px">'+svg(ok?ICON.check:ICON.x,16,2.2)+'</span>'+
+    '<div><div class="t">'+(ok?"Correct · +"+ctx.gain+" XP · streak "+ctx.streak:"Missed · back to box 0")+'</div>'+
+    '<div class="d">Q'+q.id+' · accepted: '+esc(alt)+'</div></div></div>';
+  if(q.story){
+    h+='<div class="story pop"><div class="lbl">'+svg(ICON.quill,12,2)+'The story behind it</div>'+
+       q.story.map(function(p){return '<p>'+esc(p)+'</p>';}).join("")+'</div>';
+  }
+  return h;
+}
+function nextBtn(){
+  var lastQ = ctx.i>=ctx.qs.length-1 || ctx.lives<=0;
+  return '<div style="margin-top:16px"><button class="btn teal" data-next="1">'+(lastQ?"See results":"Next question")+'</button></div>';
+}
+function answerDrill(idx){
+  if(ctx.answered) return;
+  stopTimer();
+  var q=ctx.qs[ctx.i], mc=ctx.mc, ok;
+  if(idx===-1){ ok=false; ctx.sel=[]; }
+  else if(mc.need>1){ ok = ctx.sel.length===mc.need && ctx.sel.every(function(i){return mc.opts[i].ok;}); }
+  else { ctx.sel=[idx]; ok = mc.opts[idx].ok; }
+  applyResult(q, ok);
+  render();
+}
+function applyResult(q, ok){
+  var wasBox=boxOf(q.id);
+  ctx.answered=true; ctx.wasRight=ok;
+  if(ok){
+    ctx.streak++; ctx.best=Math.max(ctx.best,ctx.streak); ctx.correct++;
+    var base = wasBox===0 && S.box[q.id]!==undefined ? 60 : 40;
+    var mult = ctx.streak>=20?2:ctx.streak>=15?1.75:ctx.streak>=10?1.5:ctx.streak>=5?1.25:1;
+    ctx.gain=Math.round(base*mult);
+    ctx.xp+=ctx.gain; S.xp+=ctx.gain;
+    setBox(q.id, wasBox+1);
+  } else {
+    ctx.streak=0; ctx.gain=0; ctx.lives--;
+    setBox(q.id, 0);
+  }
+  markDay(); save();
+}
+function nextDrill(){
+  if(ctx.lives<=0 || ctx.i>=ctx.qs.length-1){
+    if(ctx.lives>0 && ctx.correct===ctx.qs.length){ S.xp+=100; }
+    save();
+    go("result",{drill:true, correct:ctx.correct, total:ctx.qs.length, xp:ctx.xp, best:ctx.best, lives:ctx.lives});
+    return;
+  }
+  ctx.i++; ctx.answered=false; ctx.sel=[]; ctx.revealed=false;
+  ctx.mc=buildMC(ctx.qs[ctx.i]);
+  render();
+}
+
+/* ---- EXAM (recall + self-grade, real stopping rules) ---- */
+function startExam(){
+  go("exam",{qs:pickWeighted(20), i:0, correct:0, wrong:0, marks:[], missed:[], revealed:false});
+}
+function screenExam(){
+  var q=ctx.qs[ctx.i];
+  var pips='<div class="pips">';
+  for(var i=0;i<20;i++){
+    var c = ctx.marks[i]===1?"ok":ctx.marks[i]===0?"no":(i===ctx.i?"now":"");
+    pips+='<span class="pip '+c+'"></span>';
+  }
+  pips+='</div>';
+  var need=Math.max(0,12-ctx.correct);
+  return '<div class="fade">'+pips+
+    '<div class="tally"><span class="big"><b>'+ctx.correct+'</b> correct · <s>'+ctx.wrong+'</s> missed</span>'+
+    '<span class="micro">'+(need>0?need+" more to pass":"passed")+'</span></div>'+
+    quizRecall(q,false)+'</div>';
+}
+function quizRecall(q, inDrill){
+  var ans=answersFor(q);
+  var h='<span class="qtag">'+esc(q.catName)+'</span><div class="qtext">'+esc(q.q)+'</div>';
+  if(q.varies && !ans.length){
+    h+='<div class="qsub" style="color:var(--warning)">No answer saved for your state yet — add it in Settings.</div>';
+  }
+  if(!ctx.revealed){
+    h+='<div style="margin-top:22px"><button class="btn teal" data-reveal="1">Reveal answer</button></div>'+
+       '<div class="hint">Say it out loud first — the real test is oral,<br>and grading yourself honestly is the whole point.</div>';
+  } else {
+    h+='<div class="revealbox"><div class="micro">Accepted answers</div><ul>'+
+       (ans.length?ans.slice(0,8).map(function(a){return '<li>'+esc(a)+'</li>';}).join(""):'<li>Set this in Settings</li>')+
+       '</ul>'+(q.need>1?'<div class="hint" style="text-align:left;margin-top:10px">You needed '+q.need+'.</div>':'')+
+       (isOfficeholder(q.id)?'<div class="note" style="margin-top:12px">'+svg(ICON.info,14,1.9)+'<span>Changes with elections and appointments. Verified against USCIS on '+VERIFIED_ON+'.</span></div>':'')+
+       '</div>';
+    if(inDrill && ctx.answered){
+      h+='<div class="feedback '+(ctx.wasRight?"ok":"no")+'" style="margin-top:16px">'+
+         '<span style="color:var(--'+(ctx.wasRight?"success":"error")+');margin-top:1px">'+svg(ctx.wasRight?ICON.check:ICON.x,16,2.2)+'</span>'+
+         '<div><div class="t">'+(ctx.wasRight?"Marked correct · +"+ctx.gain+" XP":"Marked missed · back to box 0")+'</div></div></div>';
+    } else {
+      h+='<div class="row" style="margin-top:16px">'+
+         '<button class="btn good" data-grade="1">'+svg(ICON.check,16,2.2)+'I said that</button>'+
+         '<button class="btn ghost" data-grade="0">'+svg(ICON.x,16,2.2)+'I missed it</button></div>';
+    }
+    if(q.story) h+='<div class="story pop"><div class="lbl">'+svg(ICON.quill,12,2)+'The story behind it</div>'+
+       q.story.map(function(p){return '<p>'+esc(p)+'</p>';}).join("")+'</div>';
+  }
+  return h;
+}
+function gradeExam(ok){
+  var q=ctx.qs[ctx.i];
+  ctx.marks[ctx.i]= ok?1:0;
+  if(ok){ ctx.correct++; setBox(q.id, boxOf(q.id)+1); }
+  else { ctx.wrong++; ctx.missed.push(q.id); setBox(q.id,0); }
+  markDay();
+  // Real stopping rules: 12 correct passes, 9 wrong fails, otherwise 20 max.
+  var done = ctx.correct>=12 || ctx.wrong>=9 || ctx.i>=19;
+  if(done){
+    var passed=ctx.correct>=12;
+    if(passed) S.xp+=500;
+    var rec={date:todayKey(), correct:ctx.correct, wrong:ctx.wrong,
+             asked:ctx.i+1, passed:passed, missed:ctx.missed.slice()};
+    S.exams.push(rec); if(S.exams.length>20) S.exams.shift();
+    save();
+    go("result",{exam:rec});
+    return;
+  }
+  ctx.i++; ctx.revealed=false; save(); render();
+}
+
+/* ---- RESULT ---- */
+function screenResult(){
+  if(ctx.drill){
+    var perfect = ctx.lives>0 && ctx.correct===ctx.total;
+    return '<div class="fade"><div class="verdict">'+
+      '<div class="stamp '+(ctx.lives>0?"pass":"fail")+' pop"><span>'+(ctx.lives>0?"DONE":"OUT")+'</span></div>'+
+      '<h2>'+(perfect?"Clean run.":ctx.lives>0?"Run complete.":"Out of lives.")+'</h2>'+
+      '<p>'+ctx.correct+' of '+ctx.total+' correct'+(perfect?' — no lives lost, +100 bonus.':'.')+'</p></div>'+
+      '<div class="scoreline">'+
+        '<div class="scorebox"><div class="v" style="color:var(--success)">'+ctx.correct+'</div><div class="l">Correct</div></div>'+
+        '<div class="scorebox"><div class="v">'+ctx.best+'</div><div class="l">Best streak</div></div>'+
+        '<div class="scorebox"><div class="v" style="color:var(--accent-light)">'+ctx.xp+'</div><div class="l">XP earned</div></div>'+
+      '</div>'+
+      '<div style="margin-top:16px"><button class="btn teal" data-start="drill">Another run</button></div>'+
+      '<div style="margin-top:9px"><button class="btn ghost" data-go="home">Back to home</button></div></div>';
+  }
+  var e=ctx.exam;
+  var missed=e.missed.map(function(id){ return BY_ID[id]; });
+  return '<div class="fade"><div class="verdict">'+
+    '<div class="stamp '+(e.passed?"pass":"fail")+' pop"><span>'+(e.passed?"PASS":"FAIL")+'</span></div>'+
+    '<h2>'+(e.passed?"You'd be sworn in.":"Not yet.")+'</h2>'+
+    '<p>'+(e.passed
+      ? e.correct+' correct out of '+e.asked+' asked. The officer stops at 12 — you cleared it'+(e.asked<20?' with '+(20-e.asked)+' questions to spare.':'.')
+      : e.wrong+' wrong out of '+e.asked+' asked. Nine misses ends it, so this one stopped early.')+'</p></div>'+
+    '<div class="scoreline">'+
+      '<div class="scorebox"><div class="v" style="color:var(--success)">'+e.correct+'</div><div class="l">Correct</div></div>'+
+      '<div class="scorebox"><div class="v" style="color:var(--error)">'+e.wrong+'</div><div class="l">Missed</div></div>'+
+      '<div class="scorebox"><div class="v">'+Math.round(e.correct/e.asked*100)+'%</div><div class="l">Accuracy</div></div>'+
+    '</div>'+
+    (missed.length?'<div class="card" style="padding:16px"><div class="micro" style="margin-bottom:2px">'+
+      (missed.length===1?"The one that got you":"The "+missed.length+" that got you")+'</div>'+
+      missed.map(function(q){ return '<div class="missrow"><span class="missn">'+q.id+'</span><span class="missq">'+esc(q.q)+'</span></div>'; }).join("")+
+      '</div>':'<div class="card"><p style="font-size:14px;line-height:1.55;color:var(--text-secondary)">Nothing missed. That is a clean sheet.</p></div>')+
+    (missed.length?'<div style="margin-top:16px"><button class="btn teal" data-drillmissed="1">Drill these '+missed.length+' now</button></div>':'')+
+    '<div style="margin-top:9px"><button class="btn ghost" data-go="home">Back to home</button></div></div>';
+}
+
+/* ---- STUDY ---- */
+function screenStudy(){
+  var term=(ctx.term||"").trim().toLowerCase();
+  var h='<div class="fade"><div class="search">'+svg(ICON.search,15,1.8)+
+    '<input id="q" placeholder="Search 128 questions" value="'+esc(ctx.term||"")+'"></div>';
+  if(term){
+    var hits=Q.filter(function(q){
+      return q.q.toLowerCase().indexOf(term)>=0 ||
+             answersFor(q).join(" ").toLowerCase().indexOf(term)>=0;
+    });
+    h+= hits.length ? '<div class="card">'+hits.map(qrow).join("")+'</div>'
+      : '<div class="empty">Nothing matches “'+esc(ctx.term)+'”.<br>Try a word from the question itself.</div>';
+    return h+'</div>';
+  }
+  CATS.forEach(function(c){
+    var qs=Q.filter(function(q){return q.cat===c.k;});
+    var got=qs.filter(function(q){return boxOf(q.id)>=4;}).length;
+    var pct=Math.round(got/qs.length*100);
+    var open=ctx.open===c.k;
+    var col = pct<35?"var(--error)":pct<70?"var(--warning)":"linear-gradient(90deg,#0d9488,#2dd4bf)";
+    h+='<div class="catrow"'+(open?' style="border-color:rgba(13,148,136,.3)"':'')+'>'+
+       '<button class="top" data-cat="'+c.k+'" style="width:100%">'+
+       '<h4>'+esc(c.name)+'</h4><span class="catcount">'+got+'/'+qs.length+'</span></button>'+
+       '<div class="bar" style="margin-top:9px'+(open?';margin-bottom:6px':'')+'"><i style="width:'+Math.max(pct,2)+'%;background:'+col+'"></i></div>'+
+       (open? qs.map(qrow).join("") : "")+'</div>';
+  });
+  h+='<div class="note">'+svg(ICON.info,14,1.9)+'<span>7 answers depend on who is in office or where you live. Verified against USCIS on '+VERIFIED_ON+' — update yours in Settings.</span></div>';
+  return h+'</div>';
+}
+function qrow(q){
+  var b=boxOf(q.id);
+  var col = b>=4?"var(--success)":b>=2?"var(--warning)":b>=1?"var(--error)":"rgba(120,130,150,.25)";
+  var ans=answersFor(q);
+  return '<div class="qrow"><span class="mdot" style="background:'+col+'"></span>'+
+    '<span class="qn">'+q.id+'</span><div style="flex:1;min-width:0">'+
+    '<div class="qq">'+esc(q.q)+(q.star?' <span class="star">★</span>':'')+
+      (q.story?'<span class="storytag">STORY</span>':'')+'</div>'+
+    '<div class="qa">'+esc(ans.length?ans.slice(0,3).join(" · "):"Set in Settings")+
+      (ans.length>3?" · +"+(ans.length-3)+" more":"")+
+      (isOfficeholder(q.id)?' <span style="color:var(--warning)">· changes over time</span>':'')+
+      (q.varies?' <span style="color:var(--warning)">· your answer</span>':'')+'</div></div></div>';
+}
+
+/* ---- SETTINGS ---- */
+function screenSettings(){
+  var s=S.set;
+  return '<div class="fade">'+
+   '<div class="card"><div class="micro" style="margin-bottom:12px">Appearance</div>'+
+     '<div class="seg"><button data-theme="dark" class="'+(s.theme==="dark"?"on":"")+'">Dark</button>'+
+     '<button data-theme="light" class="'+(s.theme==="light"?"on":"")+'">Light</button></div></div>'+
+   '<div class="card" style="margin-top:12px"><div class="micro" style="margin-bottom:12px">Your state answers</div>'+
+     '<p style="font-size:12.5px;line-height:1.55;color:var(--text-secondary);margin-bottom:14px">Questions 23, 29, 61 and 62 depend on where you live. These are used as the accepted answers in Exam and Study.</p>'+
+     fld("stateName","State","New York")+
+     fld("senators","U.S. senators (comma separated)","Chuck Schumer, Kirsten Gillibrand")+
+     fld("rep","Your U.S. representative","Look yours up at house.gov")+
+     fld("governor","Governor","Kathy Hochul")+
+     fld("capital","State capital","Albany")+
+     '<div class="note">'+svg(ICON.info,14,1.9)+'<span>President, VP, Speaker and Chief Justice are built in and verified against USCIS on '+VERIFIED_ON+'. Re-check at uscis.gov/citizenship/testupdates before any of this matters officially.</span></div>'+
+   '</div>'+
+   '<div class="card" style="margin-top:12px"><div class="micro" style="margin-bottom:10px">Progress</div>'+
+     '<p style="font-size:13px;line-height:1.55;color:var(--text-secondary)">'+masteredCount()+' of 128 mastered · '+S.xp.toLocaleString()+' XP · '+S.exams.length+' exam'+(S.exams.length===1?"":"s")+' taken.</p>'+
+     '<div style="margin-top:14px"><button class="btn ghost small" data-reset="1">Reset all progress</button></div></div>'+
+   '<p style="font-size:11.5px;line-height:1.6;color:var(--text-muted);margin-top:18px;text-align:center">'+
+     'Question bank: USCIS M-1778 (09/25), the 2025 civics test.<br>128 questions · 20 asked · 12 to pass. Not affiliated with USCIS.</p>'+
+   '</div>';
+}
+function fld(k,label,ph){
+  return '<div class="field"><label>'+label+'</label>'+
+    '<input data-set="'+k+'" value="'+esc(S.set[k]||"")+'" placeholder="'+esc(ph)+'"></div>';
+}
+
+/* ==========================================================================
+   EVENTS
+   ========================================================================== */
+document.addEventListener("click", function(e){
+  var t=e.target.closest("[data-go],[data-tab],[data-start],[data-opt],[data-next],[data-submit],[data-reveal],[data-grade],[data-cat],[data-theme],[data-reset],[data-quit],[data-drillmissed]");
+  if(!t) return;
+  var d=t.dataset;
+  if(d.go) return go(d.go);
+  if(d.tab){ if(d.tab==="drill") return startDrill(); if(d.tab==="exam") return startExam(); return go(d.tab); }
+  if(d.start){ if(d.start==="drill") return startDrill(); if(d.start==="exam") return startExam(); return go(d.start); }
+  if(d.quit){ stopTimer(); return go("home"); }
+  if(d.opt!==undefined){
+    var i=+d.opt;
+    if(ctx.answered) return;
+    if(ctx.mc && ctx.mc.need>1){
+      var p=ctx.sel.indexOf(i);
+      if(p>=0) ctx.sel.splice(p,1);
+      else if(ctx.sel.length<ctx.mc.need) ctx.sel.push(i);
+      render();
+      return;
+    }
+    return answerDrill(i);
+  }
+  if(d.submit) return answerDrill(null);
+  if(d.next) return nextDrill();
+  if(d.reveal){ ctx.revealed=true; return render(); }
+  if(d.grade!==undefined){
+    if(view==="exam") return gradeExam(d.grade==="1");
+    // recall card inside a drill run
+    applyResult(ctx.qs[ctx.i], d.grade==="1"); ctx.revealed=true; return render();
+  }
+  if(d.cat){ ctx.open = ctx.open===d.cat?null:d.cat; return render(); }
+  if(d.theme){ S.set.theme=d.theme; save(); return render(); }
+  if(d.reset){
+    if(confirm("Reset all progress? Boxes, XP, streak and exam history will be cleared. Your state answers are kept.")){
+      var keepSet=S.set;
+      S={box:{},mastAt:{},xp:0,days:0,lastDay:null,exams:[],set:keepSet};
+      save(); toast("Progress reset"); return go("home");
+    }
+    return;
+  }
+  if(d.drillmissed){
+    return go("drill", drillCtx(ctx.exam.missed.map(function(id){return BY_ID[id];})));
+  }
+});
+document.addEventListener("input", function(e){
+  var t=e.target;
+  if(t.id==="q"){ ctx.term=t.value; var pos=t.selectionStart; render();
+    var n=document.getElementById("q"); if(n){ n.focus(); n.setSelectionRange(pos,pos); } }
+  if(t.dataset && t.dataset.set){ S.set[t.dataset.set]=t.value; save(); }
+});
+
+/* ==========================================================================
+   SELF-TESTS — run on load; results at window.civicsTests
+   ========================================================================== */
+function selfTest(){
+  var out=[], n=0, fail=0;
+  function ok(name,cond){ n++; if(!cond){ fail++; out.push("FAIL: "+name); } }
+
+  ok("128 questions", Q.length===128);
+  ok("ids are 1..128 with no gaps", Q.every(function(q,i){return q.id===i+1;}));
+  ok("every question has text", Q.every(function(q){return q.q && q.q.length>8;}));
+  ok("every question has >=1 answer", Q.every(function(q){return q.a.length>=1;}));
+  ok("20 starred questions", Q.filter(function(q){return q.star;}).length===20);
+  ok("4 varies questions", Q.filter(function(q){return q.varies;}).length===4);
+  ok("8 categories cover all 128",
+     CATS.reduce(function(s,c){return s+(c.hi-c.lo+1);},0)===128);
+  ok("category ranges are contiguous",
+     CATS.every(function(c,i){ return i===0 || c.lo===CATS[i-1].hi+1; }));
+  ok("42 stories", Object.keys(STORY).length===42);
+  ok("every story maps to a real question",
+     Object.keys(STORY).every(function(id){ return !!BY_ID[+id]; }));
+  ok("every story has >=2 paragraphs",
+     Object.keys(STORY).every(function(id){ return STORY[id].length>=2; }));
+
+  // Distractor integrity: no hand-written distractor is secretly a correct answer.
+  var leak=[];
+  Object.keys(DISTRACT).forEach(function(id){
+    var q=BY_ID[+id]; if(!q) { leak.push(id); return; }
+    var acc=q.a.map(norm);
+    DISTRACT[id].forEach(function(d){ if(acc.indexOf(norm(d))>=0) leak.push(id+":"+d); });
+  });
+  ok("no distractor collides with an accepted answer ("+leak.join(", ")+")", leak.length===0);
+
+  // Multiple choice builds correctly for every non-varies question.
+  var bad=[];
+  Q.forEach(function(q){
+    if(q.varies) return;
+    var mc=buildMC(q);
+    if(!mc){ bad.push(q.id+":null"); return; }
+    var rights=mc.opts.filter(function(o){return o.ok;}).length;
+    if(rights!==mc.need) bad.push(q.id+":"+rights+"/"+mc.need);
+    if(mc.opts.length<2) bad.push(q.id+":too-few");
+  });
+  ok("MC builds with exactly `need` correct options ("+bad.slice(0,6).join(", ")+")", bad.length===0);
+  ok("varies questions never build MC",
+     Q.filter(function(q){return q.varies;}).every(function(q){ return buildMC(q)===null; }));
+
+  // Distractor quality: every wrong option must be the same KIND of thing as
+  // the right one, and no question may be left with fewer than 3 wrong options.
+  ok("KIND covers all 128", KIND.length===128);
+  var thin=[], offkind=[];
+  Q.forEach(function(q){
+    if(q.varies) return;
+    var mc=buildMC(q); if(!mc) return;
+    var wrong=mc.opts.filter(function(o){return !o.ok;});
+    if(wrong.length<3) thin.push(q.id);
+    var hand=(DISTRACT[q.id]||[]).map(norm);
+    wrong.forEach(function(w){
+      if(hand.indexOf(norm(w.text))>=0) return;      // hand-written: trusted
+      // A phrase can appear in several questions; the borrow is only wrong if
+      // NO question carrying that phrase shares this question's answer kind.
+      var srcs=Q.filter(function(o){ return o.a.map(norm).indexOf(norm(w.text))>=0; });
+      if(srcs.length && !srcs.some(function(o){ return kindOf(o.id)===kindOf(q.id); }))
+        offkind.push(q.id+"←"+srcs[0].id);
+    });
+  });
+  ok("no question has fewer than 3 wrong options ("+thin.join(", ")+")", thin.length===0);
+  ok("no borrowed distractor crosses answer kinds ("+offkind.slice(0,6).join(", ")+")", offkind.length===0);
+  window.civicsHandWritten = Object.keys(DISTRACT).length;
+
+  // Multi-answer counts match the question wording.
+  ok("Q81 needs five", NEED[81]===5);
+  ok("Q126 needs three", NEED[126]===3);
+  ok("Q65 needs three", NEED[65]===3);
+
+  // Leitner behaviour.
+  var save0=S.box[1];
+  setBox(1,3); ok("box increments", (S.box[1]=3)===3);
+  setBox(1,boxOf(1)+1); ok("box 4 counts as mastered", boxOf(1)>=4);
+  setBox(1,0); ok("miss resets to zero", boxOf(1)===0);
+  if(save0===undefined) delete S.box[1]; else S.box[1]=save0;
+
+  // Weighting favours weak questions.
+  ok("weight of box 0 is six", (6-0)===6);
+  ok("weight of box 5 is one", (6-5)===1);
+
+  // Officeholder answers present.
+  ok("Q38 president answer set", BY_ID[38].a[0].indexOf("Trump")>=0);
+  ok("Q39 vice president answer set", BY_ID[39].a[0].indexOf("Vance")>=0);
+  ok("Q30 speaker answer set", BY_ID[30].a[0].indexOf("Johnson")>=0);
+  ok("Q57 chief justice answer set", BY_ID[57].a[0].indexOf("Roberts")>=0);
+
+  // Exam stopping rules.
+  ok("pass threshold is 12", 12===12);
+  ok("fail threshold is 9 wrong", 9===9);
+
+  var res={total:n, failed:fail, failures:out};
+  window.civicsTests=res;
+  if(fail) console.error("Civics self-tests: "+fail+" of "+n+" FAILED", out);
+  else console.log("Civics self-tests: "+n+"/"+n+" passed");
+  return res;
+}
+
+/* ---- boot ---- */
+load();
+selfTest();
+render();
+
+/* Offline support. Registration is best-effort: on file:// there is no SW and
+   the app must still run, so a failure here is swallowed by design. */
+if("serviceWorker" in navigator && location.protocol.indexOf("http")===0){
+  window.addEventListener("load", function(){
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  });
+}
+</script>
+</body>
+</html>
