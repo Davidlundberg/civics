@@ -675,6 +675,14 @@ function load(){
   if(!S || typeof S!=="object"){ S = {box:{}, mastAt:{}, xp:0, days:0, lastDay:null, exams:[], set:{}}; }
   S.box=S.box||{}; S.mastAt=S.mastAt||{}; S.exams=S.exams||[]; S.set=S.set||{};
   for(var k in DEFAULTS){ if(S.set[k]===undefined) S.set[k]=DEFAULTS[k]; }
+  // One-time backfill. Installs created before the rep was prefilled hold an
+  // empty string, and an empty string is not `undefined`, so the default above
+  // would never reach an existing phone. Runs once; a field cleared on purpose
+  // afterwards stays cleared.
+  if(!S.filled101){
+    for(var k2 in DEFAULTS){ if(S.set[k2]==="" && DEFAULTS[k2]) S.set[k2]=DEFAULTS[k2]; }
+    S.filled101=true;
+  }
   if(typeof S.xp!=="number") S.xp=0;
   if(typeof S.days!=="number") S.days=0;
   applyDecay();
