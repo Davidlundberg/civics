@@ -655,9 +655,13 @@ var Q = RAW.map(function(r){
 });
 var BY_ID = {}; Q.forEach(function(q){ BY_ID[q.id]=q; });
 
+/* Senators, governor and capital are state-level so a state default works.
+   The House is district-level — NY alone has 26 — so the rep default is the
+   one answer that cannot be derived from the state. Prefilled for NY-10
+   (Manhattan below 14th + parts of Brooklyn); change it in Settings. */
 var DEFAULTS = {theme:"dark", stateName:"New York",
   senators:"Chuck Schumer, Kirsten Gillibrand", governor:"Kathy Hochul",
-  capital:"Albany", rep:""};
+  capital:"Albany", rep:"Dan Goldman"};
 
 var S = null, view = "home", ctx = {}, timerH = null;
 
@@ -1138,13 +1142,13 @@ function screenSettings(){
   var s=S.set;
   return '<div class="fade">'+
    '<div class="card"><div class="micro" style="margin-bottom:12px">Appearance</div>'+
-     '<div class="seg"><button data-theme="dark" class="'+(s.theme==="dark"?"on":"")+'">Dark</button>'+
-     '<button data-theme="light" class="'+(s.theme==="light"?"on":"")+'">Light</button></div></div>'+
+     '<div class="seg"><button data-pick-theme="dark" class="'+(s.theme==="dark"?"on":"")+'">Dark</button>'+
+     '<button data-pick-theme="light" class="'+(s.theme==="light"?"on":"")+'">Light</button></div></div>'+
    '<div class="card" style="margin-top:12px"><div class="micro" style="margin-bottom:12px">Your state answers</div>'+
      '<p style="font-size:12.5px;line-height:1.55;color:var(--text-secondary);margin-bottom:14px">Questions 23, 29, 61 and 62 depend on where you live. These are used as the accepted answers in Exam and Study.</p>'+
      fld("stateName","State","New York")+
      fld("senators","U.S. senators (comma separated)","Chuck Schumer, Kirsten Gillibrand")+
-     fld("rep","Your U.S. representative","Look yours up at house.gov")+
+     fld("rep","Your U.S. representative (district-level — NY has 26)","Find yours at house.gov")+
      fld("governor","Governor","Kathy Hochul")+
      fld("capital","State capital","Albany")+
      '<div class="note">'+svg(ICON.info,14,1.9)+'<span>President, VP, Speaker and Chief Justice are built in and verified against USCIS on '+VERIFIED_ON+'. Re-check at uscis.gov/citizenship/testupdates before any of this matters officially.</span></div>'+
@@ -1165,8 +1169,13 @@ function fld(k,label,ph){
    EVENTS
    ========================================================================== */
 document.addEventListener("click", function(e){
-  var t=e.target.closest("[data-go],[data-tab],[data-start],[data-opt],[data-next],[data-submit],[data-reveal],[data-grade],[data-cat],[data-theme],[data-reset],[data-quit],[data-drillmissed]");
-  if(!t) return;
+  // NB: never put a bare [data-theme] in this list. render() writes data-theme
+  // on <html> for the CSS, so closest() would walk up from ANY unmatched tap,
+  // match the root, and re-render the app — which silently killed focus on
+  // every text input in Settings and Study. Control attributes must not
+  // collide with styling attributes. Hence data-pick-theme.
+  var t=e.target.closest("[data-go],[data-tab],[data-start],[data-opt],[data-next],[data-submit],[data-reveal],[data-grade],[data-cat],[data-pick-theme],[data-reset],[data-quit],[data-drillmissed]");
+  if(!t || t===document.documentElement) return;
   var d=t.dataset;
   if(d.go) return go(d.go);
   if(d.tab){ if(d.tab==="drill") return startDrill(); if(d.tab==="exam") return startExam(); return go(d.tab); }
@@ -1193,7 +1202,7 @@ document.addEventListener("click", function(e){
     applyResult(ctx.qs[ctx.i], d.grade==="1"); ctx.revealed=true; return render();
   }
   if(d.cat){ ctx.open = ctx.open===d.cat?null:d.cat; return render(); }
-  if(d.theme){ S.set.theme=d.theme; save(); return render(); }
+  if(d.pickTheme){ S.set.theme=d.pickTheme; save(); return render(); }
   if(d.reset){
     if(confirm("Reset all progress? Boxes, XP, streak and exam history will be cleared. Your state answers are kept.")){
       var keepSet=S.set;
@@ -1307,6 +1316,19 @@ function selfTest(){
   // Exam stopping rules.
   ok("pass threshold is 12", 12===12);
   ok("fail threshold is 9 wrong", 9===9);
+
+  // Regression guard for the tap-kills-focus bug: render() writes data-theme
+  // on <html>, so if any control selector matches the root element, every tap
+  // in the app re-renders and no text input can ever hold focus.
+  var SEL="[data-go],[data-tab],[data-start],[data-opt],[data-next],[data-submit],[data-reveal],[data-grade],[data-cat],[data-pick-theme],[data-reset],[data-quit],[data-drillmissed]";
+  ok("control selectors never match <html>", !document.documentElement.matches(SEL));
+  ok("control selectors never match <body>", !document.body.matches(SEL));
+  var probe=document.createElement("div"); probe.setAttribute("data-set","rep");
+  document.body.appendChild(probe);
+  ok("a settings input does not resolve to a control", probe.closest(SEL)===null);
+  probe.remove();
+  ok("every state answer has a default",
+     ["stateName","senators","rep","governor","capital"].every(function(k){ return !!DEFAULTS[k]; }));
 
   var res={total:n, failed:fail, failures:out};
   window.civicsTests=res;
