@@ -930,6 +930,18 @@ function pickWeighted(n, pool){
 function shuffle(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i];a[i]=a[j];a[j]=t; } return a; }
 function norm(s){ return String(s).toLowerCase().replace(/[()“”".,'’\-]/g," ").replace(/\s+/g," ").trim(); }
 
+/* The single grading contract for multiple choice, shared by Drill and Learn.
+   These had separate copies and drifted: Learn graded on one tap, so a
+   "name two" question passed on a single correct pick. One function now. */
+function gradeMC(mc, sel, idx){
+  if(!mc) return false;
+  if(mc.need>1){
+    var s = sel||[];
+    return s.length===mc.need && s.every(function(i){ return !!(mc.opts[i]&&mc.opts[i].ok); });
+  }
+  return idx!=null && idx>=0 && !!(mc.opts[idx]&&mc.opts[idx].ok);
+}
+
 /* Multiple-choice construction. Questions that depend on you are never MC. */
 function buildMC(q){
   if(q.varies) return null;
@@ -1038,26 +1050,38 @@ function tabbar(){
 
 /* ---- HOME ---- */
 function screenHome(){
-  var m=masteredCount(), pct=m/128, C=2*Math.PI*52;
+  // Two arcs, because one number could not answer "how am I doing". Learning a
+  // question puts it at box 2; mastery needs box 4. Showing mastery alone left
+  // the ring pinned at zero through an entire chapter, which reads as broken.
+  var m=masteredCount();
+  var seen=Q.filter(function(q){ return boxOf(q.id)>=2; }).length;
+  var C=2*Math.PI*52, pctM=m/128, pctS=seen/128;
   var last=S.exams.length?S.exams[S.exams.length-1]:null;
-  var verdict = m>=90 ? "You'd likely pass" : m>=50 ? "Getting close" : m>=15 ? "Early days" : "Just getting started";
+  var verdict = m>=90 ? "You'd likely pass"
+              : m>=50 ? "Getting close"
+              : seen>=60 ? "Covered a lot — now drill it in"
+              : seen>0  ? "Learning"
+              : "Just getting started";
   var weak = CATS.map(function(c){
     var qs=Q.filter(function(q){return q.cat===c.k;});
-    var got=qs.filter(function(q){return boxOf(q.id)>=4;}).length;
-    return {name:c.name, pct:Math.round(got/qs.length*100), got:got, tot:qs.length};
+    var got=qs.filter(function(q){return boxOf(q.id)>=2;}).length;
+    var mst=qs.filter(function(q){return boxOf(q.id)>=4;}).length;
+    return {name:c.name, pct:Math.round(got/qs.length*100), mst:mst, tot:qs.length};
   }).sort(function(a,b){return a.pct-b.pct;}).slice(0,3);
 
   return '<div class="fade">'+
    '<div class="card"><div class="ringwrap">'+
      '<svg width="112" height="112" viewBox="0 0 120 120" style="flex:0 0 112px">'+
        '<circle cx="60" cy="60" r="52" fill="none" stroke="rgba(120,130,150,.16)" stroke-width="9"/>'+
-       '<circle cx="60" cy="60" r="52" fill="none" stroke="url(#gr)" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+(C*(1-pct)).toFixed(1)+'" transform="rotate(-90 60 60)"/>'+
+       '<circle cx="60" cy="60" r="52" fill="none" stroke="rgba(13,148,136,.42)" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+(C*(1-pctS)).toFixed(1)+'" transform="rotate(-90 60 60)"/>'+
+       '<circle cx="60" cy="60" r="52" fill="none" stroke="url(#gr)" stroke-width="9" stroke-linecap="round" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+(C*(1-pctM)).toFixed(1)+'" transform="rotate(-90 60 60)"/>'+
        '<defs><linearGradient id="gr" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0d9488"/><stop offset="100%" stop-color="#2dd4bf"/></linearGradient></defs>'+
-       '<text x="60" y="57" text-anchor="middle" font-size="27" font-weight="500" fill="var(--text-primary)" style="font-feature-settings:\'cv01\',\'tnum\';letter-spacing:-.8px">'+m+'</text>'+
+       '<text x="60" y="57" text-anchor="middle" font-size="27" font-weight="500" fill="var(--text-primary)" style="font-feature-settings:\'cv01\',\'tnum\';letter-spacing:-.8px">'+seen+'</text>'+
        '<text x="60" y="74" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text-muted)" style="letter-spacing:.06em">OF 128</text>'+
      '</svg>'+
-     '<div class="ringtxt" style="flex:1;min-width:0"><div class="micro" style="margin-bottom:5px">Mastered</div>'+
-       '<h2>'+verdict+'</h2><p>'+Math.round(pct*100)+'% locked in. '+(128-m)+' still soft.</p></div>'+
+     '<div class="ringtxt" style="flex:1;min-width:0"><div class="micro" style="margin-bottom:5px">Learned</div>'+
+       '<h2>'+verdict+'</h2>'+
+       '<p><span style="color:var(--accent-light)">'+m+' mastered</span> · '+(seen-m)+' still soft · '+(128-seen)+' untouched</p></div>'+
    '</div></div>'+
    '<div class="pillrow">'+
      '<div class="pill"><div class="v" style="color:var(--warning)">🔥 '+S.days+'</div><div class="l">Day streak</div></div>'+
@@ -1196,14 +1220,25 @@ function screenSet(){
        '<button class="btn ghost" data-lock="0">'+svg(ICON.x,16,2.2)+'I didn\'t</button></div>';
     return h+'</div>';
   }
+  var sel = ctx.sel || [];
+  var multi = mc.need>1;
+  if(multi) h+='<div class="qsub" style="margin:-8px 0 14px">Pick '+mc.need+'.</div>';
   h+='<div class="opts" style="margin-top:0">';
   mc.opts.forEach(function(o,i){
     var cls="opt";
-    if(ctx.answered){ if(o.ok) cls+=" right"; else if(ctx.sel===i) cls+=" chosen-wrong"; else cls+=" dim"; }
+    if(ctx.answered){
+      if(o.ok) cls+=" right";
+      else if(sel.indexOf(i)>=0) cls+=" chosen-wrong";
+      else cls+=" dim";
+    } else if(sel.indexOf(i)>=0) cls+=" sel";
     h+='<button class="'+cls+'" data-setopt="'+i+'"><span class="key">'+
        (ctx.answered&&o.ok?"✓":String.fromCharCode(65+i))+'</span><span>'+esc(o.text)+'</span></button>';
   });
   h+='</div>';
+  if(multi && !ctx.answered){
+    h+='<div style="margin-top:14px"><button class="btn teal small" data-setsubmit="1"'+
+       (sel.length===mc.need?"":" disabled")+'>Submit '+sel.length+' of '+mc.need+'</button></div>';
+  }
   if(ctx.answered){
     h+= ctx.wasRight
       ? '<div class="feedback ok" style="margin-top:15px"><span style="color:var(--success);margin-top:1px">'+svg(ICON.check,16,2.2)+'</span>'+
@@ -1233,11 +1268,15 @@ function advanceLearn(){
   ctx.phase="lock"; ctx.queue=shuffle(ctx.ids); ctx.answered=false; ctx.sel=null;
   ctx.mc=buildMC(BY_ID[ctx.queue[0]]); render();
 }
+/* idx: an option index for single-answer, or null for the self-graded and
+   multi-select paths. Multi-select grades ctx.sel, never a single tap —
+   "Name two important ideas" must not be satisfied by picking one. */
 function answerSet(idx){
   if(ctx.answered) return;
-  var q=BY_ID[ctx.queue[0]];
-  var ok = idx===null ? ctx.selfOK : ctx.mc.opts[idx].ok;
-  ctx.sel=idx; ctx.answered=true; ctx.wasRight=ok;
+  var q=BY_ID[ctx.queue[0]], mc=ctx.mc, ok;
+  if(!mc){ ok = ctx.selfOK; }                        // recall card, self-graded
+  else { if(mc.need<=1) ctx.sel=[idx]; ok = gradeMC(mc, ctx.sel, idx); }
+  ctx.answered=true; ctx.wasRight=ok;
   if(ok){ ctx.correct++; setBox(q.id, Math.max(boxOf(q.id), 2)); S.xp+=25; }
   else { ctx.misses++; }
   markDay(); save(); render();
@@ -1344,9 +1383,8 @@ function answerDrill(idx){
   if(ctx.answered) return;
   stopTimer();
   var q=ctx.qs[ctx.i], mc=ctx.mc, ok;
-  if(idx===-1){ ok=false; ctx.sel=[]; }
-  else if(mc.need>1){ ok = ctx.sel.length===mc.need && ctx.sel.every(function(i){return mc.opts[i].ok;}); }
-  else { ctx.sel=[idx]; ok = mc.opts[idx].ok; }
+  if(idx===-1){ ok=false; ctx.sel=[]; }              // timed out
+  else { if(mc.need<=1) ctx.sel=[idx]; ok = gradeMC(mc, ctx.sel, idx); }
   applyResult(q, ok);
   render();
 }
@@ -1581,7 +1619,7 @@ document.addEventListener("click", function(e){
   // match the root, and re-render the app — which silently killed focus on
   // every text input in Settings and Study. Control attributes must not
   // collide with styling attributes. Hence data-pick-theme.
-  var t=e.target.closest("[data-go],[data-tab],[data-start],[data-opt],[data-next],[data-submit],[data-reveal],[data-grade],[data-cat],[data-pick-theme],[data-reset],[data-quit],[data-drillmissed],[data-chapter],[data-pickset],[data-startset],[data-learned],[data-retaught],[data-setopt],[data-setnext],[data-lock]");
+  var t=e.target.closest("[data-go],[data-tab],[data-start],[data-opt],[data-next],[data-submit],[data-reveal],[data-grade],[data-cat],[data-pick-theme],[data-reset],[data-quit],[data-drillmissed],[data-chapter],[data-pickset],[data-startset],[data-learned],[data-retaught],[data-setopt],[data-setsubmit],[data-setnext],[data-lock]");
   if(!t || t===document.documentElement) return;
   var d=t.dataset;
   if(d.go) return go(d.go);
@@ -1594,8 +1632,20 @@ document.addEventListener("click", function(e){
   if(d.pickset!==undefined){ ctx.pick=+d.pickset; return render(); }
   if(d.startset){ var p=d.startset.split(":"); return startSet(p[0], +p[1]); }
   if(d.learned) return advanceLearn();
-  if(d.retaught){ ctx.reteach=null; ctx.mc=buildMC(BY_ID[ctx.queue[0]]); return render(); }
-  if(d.setopt!==undefined) return answerSet(+d.setopt);
+  if(d.retaught){ ctx.reteach=null; ctx.sel=null; ctx.answered=false; ctx.mc=buildMC(BY_ID[ctx.queue[0]]); return render(); }
+  if(d.setopt!==undefined){
+    var si=+d.setopt;
+    if(ctx.answered) return;
+    if(ctx.mc && ctx.mc.need>1){          // toggle, do not grade
+      ctx.sel = ctx.sel || [];
+      var sp = ctx.sel.indexOf(si);
+      if(sp>=0) ctx.sel.splice(sp,1);
+      else if(ctx.sel.length < ctx.mc.need) ctx.sel.push(si);
+      return render();
+    }
+    return answerSet(si);
+  }
+  if(d.setsubmit) return answerSet(null);
   if(d.lock!==undefined){ ctx.selfOK = d.lock==="1"; return answerSet(null); }
   if(d.setnext) return setNext();
   if(d.opt!==undefined){
@@ -1792,6 +1842,42 @@ function selfTest(){
                   var n=nextSet(); var okv = n && n.cat.k===CATS[1].k; S.learn=keep; return okv; })());
   ok("learnedCount is zero on a fresh profile",
      (function(){ var keep=S.learn; S.learn={}; var v=learnedCount(); S.learn=keep; return v===0; })());
+
+  // Multi-answer grading, in BOTH quiz surfaces. Learn's lock phase originally
+  // graded on a single tap, so "Name two important ideas" was satisfied by
+  // picking one. Drive the real grading functions, not a reimplementation.
+  var multiBad=[];
+  Object.keys(NEED).forEach(function(idStr){
+    var id=+idStr, need=NEED[id], mc=buildMC(BY_ID[id]);
+    if(!mc || mc.need!==need){ multiBad.push(id+":build"); return; }
+    var rights=[]; mc.opts.forEach(function(o,i){ if(o.ok) rights.push(i); });
+    if(rights.length!==need){ multiBad.push(id+":opts"); return; }
+    // One correct pick must NOT satisfy a question that needs several.
+    if(gradeMC(mc,[rights[0]],rights[0]) !== false) multiBad.push(id+":one-passed");
+    // All of them must.
+    if(gradeMC(mc,rights.slice(0,need),null) !== true) multiBad.push(id+":all-failed");
+    // Right count but a wrong member must fail.
+    var wrong = mc.opts.map(function(o,i){return o.ok?-1:i;}).filter(function(i){return i>=0;})[0];
+    if(wrong!=null && gradeMC(mc, rights.slice(0,need-1).concat([wrong]), null) !== false)
+      multiBad.push(id+":wrong-member-passed");
+  });
+  ok("multi-answer questions need every pick ("+multiBad.join(", ")+")", multiBad.length===0);
+  // Home's hero must respond to Learn. A set clears at box 2; if the ring only
+  // counted box>=4 it stayed at zero through a whole chapter and read as broken.
+  ok("the Home ring counts learned (box>=2), not only mastered", (function(){
+    var keep=JSON.stringify(S.box);
+    S.box={}; var before=Q.filter(function(q){return boxOf(q.id)>=2;}).length;
+    setsOf(CATS[0].k)[0].forEach(function(id){ setBox(id,2); });
+    var after=Q.filter(function(q){return boxOf(q.id)>=2;}).length;
+    var mastered=masteredCount();
+    S.box=JSON.parse(keep);
+    return before===0 && after===setsOf(CATS[0].k)[0].length && mastered===0;
+  })());
+  ok("single-answer grading still works",
+     (function(){ var mc=buildMC(BY_ID[21]);
+        var r=mc.opts.findIndex(function(o){return o.ok;});
+        var w=mc.opts.findIndex(function(o){return !o.ok;});
+        return gradeMC(mc,null,r)===true && gradeMC(mc,null,w)===false; })());
 
   // Rendered-size guard. Learn's progress dots were first written as `.dot`,
   // which is also the tab bar's icon wrapper — it shrank every tab icon to 6px

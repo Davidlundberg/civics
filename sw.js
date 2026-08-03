@@ -2,7 +2,7 @@
    There is no API and no personal data on the server; the whole app is the
    shell, so a plain precache is the correct strategy. Bump VERSION on every
    deploy or phones keep serving the old HTML. */
-var VERSION = "civics-v1.1.0";
+var VERSION = "civics-v1.1.1";
 var ASSETS = [
   "./",
   "./index.html",
